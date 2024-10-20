@@ -1,0 +1,186 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: UserReviews
+  fields:
+    - name: createdAt
+      type: Timestamp
+    - name: hotelId
+      type: Uuid
+    - name: rating
+      type: Float8
+    - name: reviewId
+      type: Uuid!
+    - name: reviewText
+      type: Text
+    - name: userId
+      type: Uuid!
+  graphql:
+    typeName: Hotel_listing_UserReviews
+    inputTypeName: Hotel_listing_UserReviewsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: user_reviews
+      fieldMapping:
+        createdAt:
+          column:
+            name: created_at
+        hotelId:
+          column:
+            name: hotel_id
+        rating:
+          column:
+            name: rating
+        reviewId:
+          column:
+            name: review_id
+        reviewText:
+          column:
+            name: review_text
+        userId:
+          column:
+            name: user_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: UserReviews
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - createdAt
+          - hotelId
+          - rating
+          - reviewId
+          - reviewText
+          - userId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: UserReviewsBoolExp
+  operand:
+    object:
+      type: UserReviews
+      comparableFields:
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: hotelId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: rating
+          booleanExpressionType: Float8BoolExp
+        - fieldName: reviewId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: reviewText
+          booleanExpressionType: TextBoolExp
+        - fieldName: userId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: hotel
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_UserReviewsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: UserReviewsAggExp
+  operand:
+    object:
+      aggregatedType: UserReviews
+      aggregatableFields:
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: hotelId
+          aggregateExpression: UuidAggExp
+        - fieldName: rating
+          aggregateExpression: Float8AggExp
+        - fieldName: reviewId
+          aggregateExpression: UuidAggExp
+        - fieldName: reviewText
+          aggregateExpression: TextAggExp
+        - fieldName: userId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_UserReviewsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: UserReviews
+  objectType: UserReviews
+  source:
+    dataConnectorName: hotel_db
+    collection: user_reviews
+  filterExpressionType: UserReviewsBoolExp
+  aggregateExpression: UserReviewsAggExp
+  orderableFields:
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: hotelId
+      orderByDirections:
+        enableAll: true
+    - fieldName: rating
+      orderByDirections:
+        enableAll: true
+    - fieldName: reviewId
+      orderByDirections:
+        enableAll: true
+    - fieldName: reviewText
+      orderByDirections:
+        enableAll: true
+    - fieldName: userId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_userReviews
+    selectUniques:
+      - queryRootField: hotel_listing_userReviewsByReviewId
+        uniqueIdentifier:
+          - reviewId
+    orderByExpressionType: Hotel_listing_UserReviewsOrderBy
+    filterInputTypeName: Hotel_listing_UserReviewsFilterInput
+    aggregate:
+      queryRootField: hotel_listing_userReviewsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: UserReviews
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotel
+  sourceType: UserReviews
+  target:
+    model:
+      name: Hotels
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+

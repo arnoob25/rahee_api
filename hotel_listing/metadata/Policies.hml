@@ -1,0 +1,216 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Policies
+  fields:
+    - name: alternativeDescriptions
+      type: Jsonb
+    - name: createdAt
+      type: Timestamp
+    - name: description
+      type: Text
+    - name: isActive
+      type: Bool
+    - name: isStandard
+      type: Bool
+    - name: name
+      type: Varchar!
+    - name: policyId
+      type: Uuid!
+    - name: updatedAt
+      type: Timestamp
+  graphql:
+    typeName: Hotel_listing_Policies
+    inputTypeName: Hotel_listing_PoliciesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: policies
+      fieldMapping:
+        alternativeDescriptions:
+          column:
+            name: alternative_descriptions
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        isActive:
+          column:
+            name: is_active
+        isStandard:
+          column:
+            name: is_standard
+        name:
+          column:
+            name: name
+        policyId:
+          column:
+            name: policy_id
+        updatedAt:
+          column:
+            name: updated_at
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Policies
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - alternativeDescriptions
+          - createdAt
+          - description
+          - isActive
+          - isStandard
+          - name
+          - policyId
+          - updatedAt
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: PoliciesBoolExp
+  operand:
+    object:
+      type: Policies
+      comparableFields:
+        - fieldName: alternativeDescriptions
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: isActive
+          booleanExpressionType: BoolBoolExp
+        - fieldName: isStandard
+          booleanExpressionType: BoolBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: policyId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: updatedAt
+          booleanExpressionType: TimestampBoolExp
+      comparableRelationships:
+        - relationshipName: tagAttributes
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_PoliciesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: PoliciesAggExp
+  operand:
+    object:
+      aggregatedType: Policies
+      aggregatableFields:
+        - fieldName: alternativeDescriptions
+          aggregateExpression: JsonbAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: isActive
+          aggregateExpression: BoolAggExp
+        - fieldName: isStandard
+          aggregateExpression: BoolAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+        - fieldName: policyId
+          aggregateExpression: UuidAggExp
+        - fieldName: updatedAt
+          aggregateExpression: TimestampAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_PoliciesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Policies
+  objectType: Policies
+  source:
+    dataConnectorName: hotel_db
+    collection: policies
+  filterExpressionType: PoliciesBoolExp
+  aggregateExpression: PoliciesAggExp
+  orderableFields:
+    - fieldName: alternativeDescriptions
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: isActive
+      orderByDirections:
+        enableAll: true
+    - fieldName: isStandard
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+    - fieldName: policyId
+      orderByDirections:
+        enableAll: true
+    - fieldName: updatedAt
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_policies
+    selectUniques:
+      - queryRootField: hotel_listing_policiesByPolicyId
+        uniqueIdentifier:
+          - policyId
+    orderByExpressionType: Hotel_listing_PoliciesOrderBy
+    filterInputTypeName: Hotel_listing_PoliciesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_policiesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Policies
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: tagAttributes
+  sourceType: Policies
+  target:
+    model:
+      name: TagAttributes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: TagAttributesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: policyId
+      target:
+        modelField:
+          - fieldName: policyId
+  graphql:
+    aggregateFieldName: tagAttributesAggregate
+

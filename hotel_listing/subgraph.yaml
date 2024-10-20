@@ -1,0 +1,20 @@
+kind: Subgraph
+version: v2
+definition:
+  name: hotel_listing
+  generator:
+    rootPath: .
+    graphqlRootFieldPrefix: hotel_listing_
+    graphqlTypeNamePrefix: Hotel_listing_
+  includePaths:
+    - metadata
+  envMapping:
+    HOTEL_LISTING_HOTEL_DB_AUTHORIZATION_HEADER:
+      fromEnv: HOTEL_LISTING_HOTEL_DB_AUTHORIZATION_HEADER
+    HOTEL_LISTING_HOTEL_DB_READ_URL:
+      fromEnv: HOTEL_LISTING_HOTEL_DB_READ_URL
+    HOTEL_LISTING_HOTEL_DB_WRITE_URL:
+      fromEnv: HOTEL_LISTING_HOTEL_DB_WRITE_URL
+  connectors:
+    - path: connector/hotel_db/connector.yaml
+      connectorLinkName: hotel_db

@@ -1,0 +1,200 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: BedTypes
+  fields:
+    - name: alternativeNames
+      type: Jsonb
+    - name: bedTypeId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamp
+    - name: description
+      type: Text
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: Hotel_listing_BedTypes
+    inputTypeName: Hotel_listing_BedTypesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: bed_types
+      fieldMapping:
+        alternativeNames:
+          column:
+            name: alternative_names
+        bedTypeId:
+          column:
+            name: bed_type_id
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: BedTypes
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - alternativeNames
+          - bedTypeId
+          - createdAt
+          - description
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: BedTypesBoolExp
+  operand:
+    object:
+      type: BedTypes
+      comparableFields:
+        - fieldName: alternativeNames
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: bedTypeId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: roomTypes
+        - relationshipName: roomTypesByExtraBedTypeId
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_BedTypesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: BedTypesAggExp
+  operand:
+    object:
+      aggregatedType: BedTypes
+      aggregatableFields:
+        - fieldName: alternativeNames
+          aggregateExpression: JsonbAggExp
+        - fieldName: bedTypeId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_BedTypesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: BedTypes
+  objectType: BedTypes
+  source:
+    dataConnectorName: hotel_db
+    collection: bed_types
+  filterExpressionType: BedTypesBoolExp
+  aggregateExpression: BedTypesAggExp
+  orderableFields:
+    - fieldName: alternativeNames
+      orderByDirections:
+        enableAll: true
+    - fieldName: bedTypeId
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_bedTypes
+    selectUniques:
+      - queryRootField: hotel_listing_bedTypesByBedTypeId
+        uniqueIdentifier:
+          - bedTypeId
+    orderByExpressionType: Hotel_listing_BedTypesOrderBy
+    filterInputTypeName: Hotel_listing_BedTypesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_bedTypesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: BedTypes
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomTypes
+  sourceType: BedTypes
+  target:
+    model:
+      name: RoomTypes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: RoomTypesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: bedTypeId
+      target:
+        modelField:
+          - fieldName: bedTypeId
+  graphql:
+    aggregateFieldName: roomTypesAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomTypesByExtraBedTypeId
+  sourceType: BedTypes
+  target:
+    model:
+      name: RoomTypes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: RoomTypesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: bedTypeId
+      target:
+        modelField:
+          - fieldName: extraBedTypeId
+  graphql:
+    aggregateFieldName: roomTypesByExtraBedTypeIdAggregate
+

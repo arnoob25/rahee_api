@@ -1,0 +1,196 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Rooms
+  fields:
+    - name: availability
+      type: Bool
+    - name: floorNumber
+      type: Int8!
+    - name: roomId
+      type: Uuid!
+    - name: roomNumber
+      type: Varchar!
+    - name: roomTypeId
+      type: Uuid
+  graphql:
+    typeName: Hotel_listing_Rooms
+    inputTypeName: Hotel_listing_RoomsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: rooms
+      fieldMapping:
+        availability:
+          column:
+            name: availability
+        floorNumber:
+          column:
+            name: floor_number
+        roomId:
+          column:
+            name: room_id
+        roomNumber:
+          column:
+            name: room_number
+        roomTypeId:
+          column:
+            name: room_type_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Rooms
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - availability
+          - floorNumber
+          - roomId
+          - roomNumber
+          - roomTypeId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: RoomsBoolExp
+  operand:
+    object:
+      type: Rooms
+      comparableFields:
+        - fieldName: availability
+          booleanExpressionType: BoolBoolExp
+        - fieldName: floorNumber
+          booleanExpressionType: Int8BoolExp
+        - fieldName: roomId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: roomNumber
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: roomTypeId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: reservations
+        - relationshipName: roomType
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_RoomsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: RoomsAggExp
+  operand:
+    object:
+      aggregatedType: Rooms
+      aggregatableFields:
+        - fieldName: availability
+          aggregateExpression: BoolAggExp
+        - fieldName: floorNumber
+          aggregateExpression: Int8AggExp
+        - fieldName: roomId
+          aggregateExpression: UuidAggExp
+        - fieldName: roomNumber
+          aggregateExpression: VarcharAggExp
+        - fieldName: roomTypeId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_RoomsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Rooms
+  objectType: Rooms
+  source:
+    dataConnectorName: hotel_db
+    collection: rooms
+  filterExpressionType: RoomsBoolExp
+  aggregateExpression: RoomsAggExp
+  orderableFields:
+    - fieldName: availability
+      orderByDirections:
+        enableAll: true
+    - fieldName: floorNumber
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomId
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomNumber
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomTypeId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_rooms
+    selectUniques:
+      - queryRootField: hotel_listing_roomsByRoomId
+        uniqueIdentifier:
+          - roomId
+    orderByExpressionType: Hotel_listing_RoomsOrderBy
+    filterInputTypeName: Hotel_listing_RoomsFilterInput
+    aggregate:
+      queryRootField: hotel_listing_roomsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Rooms
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: reservations
+  sourceType: Rooms
+  target:
+    model:
+      name: Reservations
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: ReservationsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomId
+      target:
+        modelField:
+          - fieldName: roomId
+  graphql:
+    aggregateFieldName: reservationsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomType
+  sourceType: Rooms
+  target:
+    model:
+      name: RoomTypes
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomTypeId
+      target:
+        modelField:
+          - fieldName: roomTypeId
+

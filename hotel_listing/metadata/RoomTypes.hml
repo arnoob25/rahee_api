@@ -1,0 +1,377 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: RoomTypes
+  fields:
+    - name: bedTypeId
+      type: Uuid
+    - name: complementaryChild
+      type: Int8
+    - name: extraBedAvailable
+      type: Bool
+    - name: extraBedTypeId
+      type: Uuid
+    - name: hotelId
+      type: Uuid
+    - name: maxAdults
+      type: Int8!
+    - name: maxGuests
+      type: Int8!
+    - name: name
+      type: Varchar!
+    - name: pricePerNight
+      type: Float8!
+    - name: roomCategoryId
+      type: Uuid
+    - name: roomTypeId
+      type: Uuid!
+  graphql:
+    typeName: Hotel_listing_RoomTypes
+    inputTypeName: Hotel_listing_RoomTypesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: room_types
+      fieldMapping:
+        bedTypeId:
+          column:
+            name: bed_type_id
+        complementaryChild:
+          column:
+            name: complementary_child
+        extraBedAvailable:
+          column:
+            name: extra_bed_available
+        extraBedTypeId:
+          column:
+            name: extra_bed_type_id
+        hotelId:
+          column:
+            name: hotel_id
+        maxAdults:
+          column:
+            name: max_adults
+        maxGuests:
+          column:
+            name: max_guests
+        name:
+          column:
+            name: name
+        pricePerNight:
+          column:
+            name: price_per_night
+        roomCategoryId:
+          column:
+            name: room_category_id
+        roomTypeId:
+          column:
+            name: room_type_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: RoomTypes
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - bedTypeId
+          - complementaryChild
+          - extraBedAvailable
+          - extraBedTypeId
+          - hotelId
+          - maxAdults
+          - maxGuests
+          - name
+          - pricePerNight
+          - roomCategoryId
+          - roomTypeId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: RoomTypesBoolExp
+  operand:
+    object:
+      type: RoomTypes
+      comparableFields:
+        - fieldName: bedTypeId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: complementaryChild
+          booleanExpressionType: Int8BoolExp
+        - fieldName: extraBedAvailable
+          booleanExpressionType: BoolBoolExp
+        - fieldName: extraBedTypeId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: hotelId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: maxAdults
+          booleanExpressionType: Int8BoolExp
+        - fieldName: maxGuests
+          booleanExpressionType: Int8BoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: pricePerNight
+          booleanExpressionType: Float8BoolExp
+        - fieldName: roomCategoryId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: roomTypeId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: media
+        - relationshipName: roomAmenitiesLinks
+        - relationshipName: bedType
+        - relationshipName: bedTypeByExtraBedTypeId
+        - relationshipName: hotel
+        - relationshipName: roomCategory
+        - relationshipName: rooms
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_RoomTypesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: RoomTypesAggExp
+  operand:
+    object:
+      aggregatedType: RoomTypes
+      aggregatableFields:
+        - fieldName: bedTypeId
+          aggregateExpression: UuidAggExp
+        - fieldName: complementaryChild
+          aggregateExpression: Int8AggExp
+        - fieldName: extraBedAvailable
+          aggregateExpression: BoolAggExp
+        - fieldName: extraBedTypeId
+          aggregateExpression: UuidAggExp
+        - fieldName: hotelId
+          aggregateExpression: UuidAggExp
+        - fieldName: maxAdults
+          aggregateExpression: Int8AggExp
+        - fieldName: maxGuests
+          aggregateExpression: Int8AggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+        - fieldName: pricePerNight
+          aggregateExpression: Float8AggExp
+        - fieldName: roomCategoryId
+          aggregateExpression: UuidAggExp
+        - fieldName: roomTypeId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_RoomTypesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: RoomTypes
+  objectType: RoomTypes
+  source:
+    dataConnectorName: hotel_db
+    collection: room_types
+  filterExpressionType: RoomTypesBoolExp
+  aggregateExpression: RoomTypesAggExp
+  orderableFields:
+    - fieldName: bedTypeId
+      orderByDirections:
+        enableAll: true
+    - fieldName: complementaryChild
+      orderByDirections:
+        enableAll: true
+    - fieldName: extraBedAvailable
+      orderByDirections:
+        enableAll: true
+    - fieldName: extraBedTypeId
+      orderByDirections:
+        enableAll: true
+    - fieldName: hotelId
+      orderByDirections:
+        enableAll: true
+    - fieldName: maxAdults
+      orderByDirections:
+        enableAll: true
+    - fieldName: maxGuests
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+    - fieldName: pricePerNight
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomCategoryId
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomTypeId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_roomTypes
+    selectUniques:
+      - queryRootField: hotel_listing_roomTypesByRoomTypeId
+        uniqueIdentifier:
+          - roomTypeId
+    orderByExpressionType: Hotel_listing_RoomTypesOrderBy
+    filterInputTypeName: Hotel_listing_RoomTypesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_roomTypesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: RoomTypes
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: media
+  sourceType: RoomTypes
+  target:
+    model:
+      name: Media
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: MediaAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomTypeId
+      target:
+        modelField:
+          - fieldName: roomTypeId
+  graphql:
+    aggregateFieldName: mediaAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomAmenitiesLinks
+  sourceType: RoomTypes
+  target:
+    model:
+      name: RoomAmenitiesLink
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: RoomAmenitiesLinkAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomTypeId
+      target:
+        modelField:
+          - fieldName: roomTypeId
+  graphql:
+    aggregateFieldName: roomAmenitiesLinksAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: bedType
+  sourceType: RoomTypes
+  target:
+    model:
+      name: BedTypes
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: bedTypeId
+      target:
+        modelField:
+          - fieldName: bedTypeId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: bedTypeByExtraBedTypeId
+  sourceType: RoomTypes
+  target:
+    model:
+      name: BedTypes
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: extraBedTypeId
+      target:
+        modelField:
+          - fieldName: bedTypeId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotel
+  sourceType: RoomTypes
+  target:
+    model:
+      name: Hotels
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomCategory
+  sourceType: RoomTypes
+  target:
+    model:
+      name: RoomCategories
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomCategoryId
+      target:
+        modelField:
+          - fieldName: categoryId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: rooms
+  sourceType: RoomTypes
+  target:
+    model:
+      name: Rooms
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: RoomsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomTypeId
+      target:
+        modelField:
+          - fieldName: roomTypeId
+  graphql:
+    aggregateFieldName: roomsAggregate
+

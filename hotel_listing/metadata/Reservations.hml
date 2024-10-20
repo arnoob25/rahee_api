@@ -1,0 +1,199 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Reservations
+  fields:
+    - name: checkInDate
+      type: Date!
+    - name: checkOutDate
+      type: Date!
+    - name: createdAt
+      type: Timestamp
+    - name: guestName
+      type: Varchar!
+    - name: reservationId
+      type: Uuid!
+    - name: roomId
+      type: Uuid
+    - name: status
+      type: ReservationStatus!
+  graphql:
+    typeName: Hotel_listing_Reservations
+    inputTypeName: Hotel_listing_ReservationsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: reservations
+      fieldMapping:
+        checkInDate:
+          column:
+            name: check_in_date
+        checkOutDate:
+          column:
+            name: check_out_date
+        createdAt:
+          column:
+            name: created_at
+        guestName:
+          column:
+            name: guest_name
+        reservationId:
+          column:
+            name: reservation_id
+        roomId:
+          column:
+            name: room_id
+        status:
+          column:
+            name: status
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Reservations
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - checkInDate
+          - checkOutDate
+          - createdAt
+          - guestName
+          - reservationId
+          - roomId
+          - status
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ReservationsBoolExp
+  operand:
+    object:
+      type: Reservations
+      comparableFields:
+        - fieldName: checkInDate
+          booleanExpressionType: DateBoolExp
+        - fieldName: checkOutDate
+          booleanExpressionType: DateBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: guestName
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: reservationId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: roomId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: status
+          booleanExpressionType: ReservationStatusBoolExp
+      comparableRelationships:
+        - relationshipName: room
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_ReservationsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ReservationsAggExp
+  operand:
+    object:
+      aggregatedType: Reservations
+      aggregatableFields:
+        - fieldName: checkInDate
+          aggregateExpression: DateAggExp
+        - fieldName: checkOutDate
+          aggregateExpression: DateAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: guestName
+          aggregateExpression: VarcharAggExp
+        - fieldName: reservationId
+          aggregateExpression: UuidAggExp
+        - fieldName: roomId
+          aggregateExpression: UuidAggExp
+        - fieldName: status
+          aggregateExpression: ReservationStatusAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_ReservationsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Reservations
+  objectType: Reservations
+  source:
+    dataConnectorName: hotel_db
+    collection: reservations
+  filterExpressionType: ReservationsBoolExp
+  aggregateExpression: ReservationsAggExp
+  orderableFields:
+    - fieldName: checkInDate
+      orderByDirections:
+        enableAll: true
+    - fieldName: checkOutDate
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: guestName
+      orderByDirections:
+        enableAll: true
+    - fieldName: reservationId
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomId
+      orderByDirections:
+        enableAll: true
+    - fieldName: status
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_reservations
+    selectUniques:
+      - queryRootField: hotel_listing_reservationsByReservationId
+        uniqueIdentifier:
+          - reservationId
+    orderByExpressionType: Hotel_listing_ReservationsOrderBy
+    filterInputTypeName: Hotel_listing_ReservationsFilterInput
+    aggregate:
+      queryRootField: hotel_listing_reservationsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Reservations
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: room
+  sourceType: Reservations
+  target:
+    model:
+      name: Rooms
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomId
+      target:
+        modelField:
+          - fieldName: roomId
+

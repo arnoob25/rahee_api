@@ -1,0 +1,173 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Analytics
+  fields:
+    - name: analyticsId
+      type: Uuid!
+    - name: bookingsMade
+      type: Int8!
+    - name: hotelId
+      type: Uuid
+    - name: pageViews
+      type: Int8!
+    - name: timestamp
+      type: Timestamp
+  graphql:
+    typeName: Hotel_listing_Analytics
+    inputTypeName: Hotel_listing_AnalyticsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: analytics
+      fieldMapping:
+        analyticsId:
+          column:
+            name: analytics_id
+        bookingsMade:
+          column:
+            name: bookings_made
+        hotelId:
+          column:
+            name: hotel_id
+        pageViews:
+          column:
+            name: page_views
+        timestamp:
+          column:
+            name: timestamp
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Analytics
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - analyticsId
+          - bookingsMade
+          - hotelId
+          - pageViews
+          - timestamp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: AnalyticsBoolExp
+  operand:
+    object:
+      type: Analytics
+      comparableFields:
+        - fieldName: analyticsId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: bookingsMade
+          booleanExpressionType: Int8BoolExp
+        - fieldName: hotelId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: pageViews
+          booleanExpressionType: Int8BoolExp
+        - fieldName: timestamp
+          booleanExpressionType: TimestampBoolExp
+      comparableRelationships:
+        - relationshipName: hotel
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_AnalyticsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: AnalyticsAggExp
+  operand:
+    object:
+      aggregatedType: Analytics
+      aggregatableFields:
+        - fieldName: analyticsId
+          aggregateExpression: UuidAggExp
+        - fieldName: bookingsMade
+          aggregateExpression: Int8AggExp
+        - fieldName: hotelId
+          aggregateExpression: UuidAggExp
+        - fieldName: pageViews
+          aggregateExpression: Int8AggExp
+        - fieldName: timestamp
+          aggregateExpression: TimestampAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_AnalyticsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Analytics
+  objectType: Analytics
+  source:
+    dataConnectorName: hotel_db
+    collection: analytics
+  filterExpressionType: AnalyticsBoolExp
+  aggregateExpression: AnalyticsAggExp
+  orderableFields:
+    - fieldName: analyticsId
+      orderByDirections:
+        enableAll: true
+    - fieldName: bookingsMade
+      orderByDirections:
+        enableAll: true
+    - fieldName: hotelId
+      orderByDirections:
+        enableAll: true
+    - fieldName: pageViews
+      orderByDirections:
+        enableAll: true
+    - fieldName: timestamp
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_analytics
+    selectUniques:
+      - queryRootField: hotel_listing_analyticsByAnalyticsId
+        uniqueIdentifier:
+          - analyticsId
+    orderByExpressionType: Hotel_listing_AnalyticsOrderBy
+    filterInputTypeName: Hotel_listing_AnalyticsFilterInput
+    aggregate:
+      queryRootField: hotel_listing_analyticsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Analytics
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotel
+  sourceType: Analytics
+  target:
+    model:
+      name: Hotels
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+

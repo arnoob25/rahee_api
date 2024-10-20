@@ -1,0 +1,177 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: FacilityCategories
+  fields:
+    - name: alternativeNames
+      type: Jsonb
+    - name: categoryId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamp
+    - name: description
+      type: Text
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: Hotel_listing_FacilityCategories
+    inputTypeName: Hotel_listing_FacilityCategoriesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: facility_categories
+      fieldMapping:
+        alternativeNames:
+          column:
+            name: alternative_names
+        categoryId:
+          column:
+            name: category_id
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: FacilityCategories
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - alternativeNames
+          - categoryId
+          - createdAt
+          - description
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: FacilityCategoriesBoolExp
+  operand:
+    object:
+      type: FacilityCategories
+      comparableFields:
+        - fieldName: alternativeNames
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: categoryId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: facilities
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_FacilityCategoriesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: FacilityCategoriesAggExp
+  operand:
+    object:
+      aggregatedType: FacilityCategories
+      aggregatableFields:
+        - fieldName: alternativeNames
+          aggregateExpression: JsonbAggExp
+        - fieldName: categoryId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_FacilityCategoriesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: FacilityCategories
+  objectType: FacilityCategories
+  source:
+    dataConnectorName: hotel_db
+    collection: facility_categories
+  filterExpressionType: FacilityCategoriesBoolExp
+  aggregateExpression: FacilityCategoriesAggExp
+  orderableFields:
+    - fieldName: alternativeNames
+      orderByDirections:
+        enableAll: true
+    - fieldName: categoryId
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_facilityCategories
+    selectUniques:
+      - queryRootField: hotel_listing_facilityCategoriesByCategoryId
+        uniqueIdentifier:
+          - categoryId
+    orderByExpressionType: Hotel_listing_FacilityCategoriesOrderBy
+    filterInputTypeName: Hotel_listing_FacilityCategoriesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_facilityCategoriesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: FacilityCategories
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: facilities
+  sourceType: FacilityCategories
+  target:
+    model:
+      name: Facilities
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: FacilitiesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: categoryId
+      target:
+        modelField:
+          - fieldName: categoryId
+  graphql:
+    aggregateFieldName: facilitiesAggregate
+

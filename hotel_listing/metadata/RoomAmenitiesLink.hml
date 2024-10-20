@@ -1,0 +1,166 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: RoomAmenitiesLink
+  fields:
+    - name: amenityId
+      type: Uuid
+    - name: linkId
+      type: Uuid!
+    - name: roomTypeId
+      type: Uuid
+  graphql:
+    typeName: Hotel_listing_RoomAmenitiesLink
+    inputTypeName: Hotel_listing_RoomAmenitiesLinkInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: room_amenities_link
+      fieldMapping:
+        amenityId:
+          column:
+            name: amenity_id
+        linkId:
+          column:
+            name: link_id
+        roomTypeId:
+          column:
+            name: room_type_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: RoomAmenitiesLink
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - amenityId
+          - linkId
+          - roomTypeId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: RoomAmenitiesLinkBoolExp
+  operand:
+    object:
+      type: RoomAmenitiesLink
+      comparableFields:
+        - fieldName: amenityId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: linkId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: roomTypeId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: amenity
+        - relationshipName: roomType
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_RoomAmenitiesLinkBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: RoomAmenitiesLinkAggExp
+  operand:
+    object:
+      aggregatedType: RoomAmenitiesLink
+      aggregatableFields:
+        - fieldName: amenityId
+          aggregateExpression: UuidAggExp
+        - fieldName: linkId
+          aggregateExpression: UuidAggExp
+        - fieldName: roomTypeId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_RoomAmenitiesLinkAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: RoomAmenitiesLink
+  objectType: RoomAmenitiesLink
+  source:
+    dataConnectorName: hotel_db
+    collection: room_amenities_link
+  filterExpressionType: RoomAmenitiesLinkBoolExp
+  aggregateExpression: RoomAmenitiesLinkAggExp
+  orderableFields:
+    - fieldName: amenityId
+      orderByDirections:
+        enableAll: true
+    - fieldName: linkId
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomTypeId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_roomAmenitiesLink
+    selectUniques:
+      - queryRootField: hotel_listing_roomAmenitiesLinkByLinkId
+        uniqueIdentifier:
+          - linkId
+    orderByExpressionType: Hotel_listing_RoomAmenitiesLinkOrderBy
+    filterInputTypeName: Hotel_listing_RoomAmenitiesLinkFilterInput
+    aggregate:
+      queryRootField: hotel_listing_roomAmenitiesLinkAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: RoomAmenitiesLink
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: amenity
+  sourceType: RoomAmenitiesLink
+  target:
+    model:
+      name: Amenities
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: amenityId
+      target:
+        modelField:
+          - fieldName: amenityId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomType
+  sourceType: RoomAmenitiesLink
+  target:
+    model:
+      name: RoomTypes
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomTypeId
+      target:
+        modelField:
+          - fieldName: roomTypeId
+

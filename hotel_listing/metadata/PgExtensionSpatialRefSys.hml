@@ -1,0 +1,155 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: PgExtensionSpatialRefSys
+  description: Shows all defined Spatial Reference Identifiers (SRIDs). Matches
+    PostGIS' spatial_ref_sys table.
+  fields:
+    - name: authName
+      type: Varchar
+    - name: authSrid
+      type: Int8
+    - name: proj4Text
+      type: Varchar
+    - name: srid
+      type: Int8
+    - name: srtext
+      type: Varchar
+  graphql:
+    typeName: Hotel_listing_PgExtensionSpatialRefSys
+    inputTypeName: Hotel_listing_PgExtensionSpatialRefSysInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: pg_extension_spatial_ref_sys
+      fieldMapping:
+        authName:
+          column:
+            name: auth_name
+        authSrid:
+          column:
+            name: auth_srid
+        proj4Text:
+          column:
+            name: proj4text
+        srid:
+          column:
+            name: srid
+        srtext:
+          column:
+            name: srtext
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: PgExtensionSpatialRefSys
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - authName
+          - authSrid
+          - proj4Text
+          - srid
+          - srtext
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: PgExtensionSpatialRefSysBoolExp
+  operand:
+    object:
+      type: PgExtensionSpatialRefSys
+      comparableFields:
+        - fieldName: authName
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: authSrid
+          booleanExpressionType: Int8BoolExp
+        - fieldName: proj4Text
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: srid
+          booleanExpressionType: Int8BoolExp
+        - fieldName: srtext
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships: []
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_PgExtensionSpatialRefSysBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: PgExtensionSpatialRefSysAggExp
+  operand:
+    object:
+      aggregatedType: PgExtensionSpatialRefSys
+      aggregatableFields:
+        - fieldName: authName
+          aggregateExpression: VarcharAggExp
+        - fieldName: authSrid
+          aggregateExpression: Int8AggExp
+        - fieldName: proj4Text
+          aggregateExpression: VarcharAggExp
+        - fieldName: srid
+          aggregateExpression: Int8AggExp
+        - fieldName: srtext
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_PgExtensionSpatialRefSysAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: PgExtensionSpatialRefSys
+  objectType: PgExtensionSpatialRefSys
+  source:
+    dataConnectorName: hotel_db
+    collection: pg_extension_spatial_ref_sys
+  filterExpressionType: PgExtensionSpatialRefSysBoolExp
+  aggregateExpression: PgExtensionSpatialRefSysAggExp
+  orderableFields:
+    - fieldName: authName
+      orderByDirections:
+        enableAll: true
+    - fieldName: authSrid
+      orderByDirections:
+        enableAll: true
+    - fieldName: proj4Text
+      orderByDirections:
+        enableAll: true
+    - fieldName: srid
+      orderByDirections:
+        enableAll: true
+    - fieldName: srtext
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_pgExtensionSpatialRefSys
+    selectUniques: []
+    orderByExpressionType: Hotel_listing_PgExtensionSpatialRefSysOrderBy
+    filterInputTypeName: Hotel_listing_PgExtensionSpatialRefSysFilterInput
+    aggregate:
+      queryRootField: hotel_listing_pgExtensionSpatialRefSysAggregate
+  description: Shows all defined Spatial Reference Identifiers (SRIDs). Matches
+    PostGIS' spatial_ref_sys table.
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: PgExtensionSpatialRefSys
+  permissions:
+    - role: admin
+      select:
+        filter: null
+

@@ -1,0 +1,380 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Hotels
+  fields:
+    - name: address
+      type: Jsonb
+    - name: contactInfo
+      type: Jsonb
+    - name: createdAt
+      type: Timestamp
+    - name: description
+      type: Text
+    - name: hotelId
+      type: Uuid!
+    - name: latitude
+      type: Float8
+    - name: longitude
+      type: Float8
+    - name: name
+      type: Varchar!
+    - name: reviewScore
+      type: Float8
+    - name: starRating
+      type: Float8
+  graphql:
+    typeName: Hotel_listing_Hotels
+    inputTypeName: Hotel_listing_HotelsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: hotels
+      fieldMapping:
+        address:
+          column:
+            name: address
+        contactInfo:
+          column:
+            name: contact_info
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        hotelId:
+          column:
+            name: hotel_id
+        latitude:
+          column:
+            name: latitude
+        longitude:
+          column:
+            name: longitude
+        name:
+          column:
+            name: name
+        reviewScore:
+          column:
+            name: review_score
+        starRating:
+          column:
+            name: star_rating
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Hotels
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - address
+          - contactInfo
+          - createdAt
+          - description
+          - hotelId
+          - latitude
+          - longitude
+          - name
+          - reviewScore
+          - starRating
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: HotelsBoolExp
+  operand:
+    object:
+      type: Hotels
+      comparableFields:
+        - fieldName: address
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: contactInfo
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: hotelId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: latitude
+          booleanExpressionType: Float8BoolExp
+        - fieldName: longitude
+          booleanExpressionType: Float8BoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: reviewScore
+          booleanExpressionType: Float8BoolExp
+        - fieldName: starRating
+          booleanExpressionType: Float8BoolExp
+      comparableRelationships:
+        - relationshipName: analytics
+        - relationshipName: hotelFacilitiesLinks
+        - relationshipName: hotelTagAttributesLinks
+        - relationshipName: media
+        - relationshipName: promotions
+        - relationshipName: roomTypes
+        - relationshipName: userReviews
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_HotelsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: HotelsAggExp
+  operand:
+    object:
+      aggregatedType: Hotels
+      aggregatableFields:
+        - fieldName: address
+          aggregateExpression: JsonbAggExp
+        - fieldName: contactInfo
+          aggregateExpression: JsonbAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: hotelId
+          aggregateExpression: UuidAggExp
+        - fieldName: latitude
+          aggregateExpression: Float8AggExp
+        - fieldName: longitude
+          aggregateExpression: Float8AggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+        - fieldName: reviewScore
+          aggregateExpression: Float8AggExp
+        - fieldName: starRating
+          aggregateExpression: Float8AggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_HotelsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Hotels
+  objectType: Hotels
+  source:
+    dataConnectorName: hotel_db
+    collection: hotels
+  filterExpressionType: HotelsBoolExp
+  aggregateExpression: HotelsAggExp
+  orderableFields:
+    - fieldName: address
+      orderByDirections:
+        enableAll: true
+    - fieldName: contactInfo
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: hotelId
+      orderByDirections:
+        enableAll: true
+    - fieldName: latitude
+      orderByDirections:
+        enableAll: true
+    - fieldName: longitude
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+    - fieldName: reviewScore
+      orderByDirections:
+        enableAll: true
+    - fieldName: starRating
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_hotels
+    selectUniques:
+      - queryRootField: hotel_listing_hotelsByHotelId
+        uniqueIdentifier:
+          - hotelId
+    orderByExpressionType: Hotel_listing_HotelsOrderBy
+    filterInputTypeName: Hotel_listing_HotelsFilterInput
+    aggregate:
+      queryRootField: hotel_listing_hotelsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Hotels
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: analytics
+  sourceType: Hotels
+  target:
+    model:
+      name: Analytics
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: AnalyticsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+  graphql:
+    aggregateFieldName: analyticsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotelFacilitiesLinks
+  sourceType: Hotels
+  target:
+    model:
+      name: HotelFacilitiesLink
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: HotelFacilitiesLinkAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+  graphql:
+    aggregateFieldName: hotelFacilitiesLinksAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotelTagAttributesLinks
+  sourceType: Hotels
+  target:
+    model:
+      name: HotelTagAttributesLink
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: HotelTagAttributesLinkAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+  graphql:
+    aggregateFieldName: hotelTagAttributesLinksAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: media
+  sourceType: Hotels
+  target:
+    model:
+      name: Media
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: MediaAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+  graphql:
+    aggregateFieldName: mediaAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: promotions
+  sourceType: Hotels
+  target:
+    model:
+      name: Promotions
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: PromotionsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+  graphql:
+    aggregateFieldName: promotionsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomTypes
+  sourceType: Hotels
+  target:
+    model:
+      name: RoomTypes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: RoomTypesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+  graphql:
+    aggregateFieldName: roomTypesAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: userReviews
+  sourceType: Hotels
+  target:
+    model:
+      name: UserReviews
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: UserReviewsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+  graphql:
+    aggregateFieldName: userReviewsAggregate
+

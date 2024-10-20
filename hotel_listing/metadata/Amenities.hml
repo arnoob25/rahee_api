@@ -1,0 +1,187 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Amenities
+  fields:
+    - name: amenityId
+      type: Uuid!
+    - name: description
+      type: Text
+    - name: isStandard
+      type: Bool
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: Hotel_listing_Amenities
+    inputTypeName: Hotel_listing_AmenitiesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: amenities
+      fieldMapping:
+        amenityId:
+          column:
+            name: amenity_id
+        description:
+          column:
+            name: description
+        isStandard:
+          column:
+            name: is_standard
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Amenities
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - amenityId
+          - description
+          - isStandard
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: AmenitiesBoolExp
+  operand:
+    object:
+      type: Amenities
+      comparableFields:
+        - fieldName: amenityId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: isStandard
+          booleanExpressionType: BoolBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: roomAmenitiesLinks
+        - relationshipName: tagAttributes
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_AmenitiesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: AmenitiesAggExp
+  operand:
+    object:
+      aggregatedType: Amenities
+      aggregatableFields:
+        - fieldName: amenityId
+          aggregateExpression: UuidAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: isStandard
+          aggregateExpression: BoolAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_AmenitiesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Amenities
+  objectType: Amenities
+  source:
+    dataConnectorName: hotel_db
+    collection: amenities
+  filterExpressionType: AmenitiesBoolExp
+  aggregateExpression: AmenitiesAggExp
+  orderableFields:
+    - fieldName: amenityId
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: isStandard
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_amenities
+    selectUniques:
+      - queryRootField: hotel_listing_amenitiesByAmenityId
+        uniqueIdentifier:
+          - amenityId
+    orderByExpressionType: Hotel_listing_AmenitiesOrderBy
+    filterInputTypeName: Hotel_listing_AmenitiesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_amenitiesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Amenities
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomAmenitiesLinks
+  sourceType: Amenities
+  target:
+    model:
+      name: RoomAmenitiesLink
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: RoomAmenitiesLinkAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: amenityId
+      target:
+        modelField:
+          - fieldName: amenityId
+  graphql:
+    aggregateFieldName: roomAmenitiesLinksAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: tagAttributes
+  sourceType: Amenities
+  target:
+    model:
+      name: TagAttributes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: TagAttributesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: amenityId
+      target:
+        modelField:
+          - fieldName: amenityId
+  graphql:
+    aggregateFieldName: tagAttributesAggregate
+

@@ -1,0 +1,256 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: TagAttributes
+  fields:
+    - name: amenityId
+      type: Uuid
+    - name: facilityId
+      type: Uuid
+    - name: maxPriceLimit
+      type: Float8
+    - name: minPriceLimit
+      type: Float8
+    - name: policyId
+      type: Uuid
+    - name: tagAttributeId
+      type: Uuid!
+    - name: tagId
+      type: Uuid
+  graphql:
+    typeName: Hotel_listing_TagAttributes
+    inputTypeName: Hotel_listing_TagAttributesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: tag_attributes
+      fieldMapping:
+        amenityId:
+          column:
+            name: amenity_id
+        facilityId:
+          column:
+            name: facility_id
+        maxPriceLimit:
+          column:
+            name: max_price_limit
+        minPriceLimit:
+          column:
+            name: min_price_limit
+        policyId:
+          column:
+            name: policy_id
+        tagAttributeId:
+          column:
+            name: tag_attribute_id
+        tagId:
+          column:
+            name: tag_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: TagAttributes
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - amenityId
+          - facilityId
+          - maxPriceLimit
+          - minPriceLimit
+          - policyId
+          - tagAttributeId
+          - tagId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: TagAttributesBoolExp
+  operand:
+    object:
+      type: TagAttributes
+      comparableFields:
+        - fieldName: amenityId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: facilityId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: maxPriceLimit
+          booleanExpressionType: Float8BoolExp
+        - fieldName: minPriceLimit
+          booleanExpressionType: Float8BoolExp
+        - fieldName: policyId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: tagAttributeId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: tagId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: amenity
+        - relationshipName: facility
+        - relationshipName: policy
+        - relationshipName: tag
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_TagAttributesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: TagAttributesAggExp
+  operand:
+    object:
+      aggregatedType: TagAttributes
+      aggregatableFields:
+        - fieldName: amenityId
+          aggregateExpression: UuidAggExp
+        - fieldName: facilityId
+          aggregateExpression: UuidAggExp
+        - fieldName: maxPriceLimit
+          aggregateExpression: Float8AggExp
+        - fieldName: minPriceLimit
+          aggregateExpression: Float8AggExp
+        - fieldName: policyId
+          aggregateExpression: UuidAggExp
+        - fieldName: tagAttributeId
+          aggregateExpression: UuidAggExp
+        - fieldName: tagId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_TagAttributesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: TagAttributes
+  objectType: TagAttributes
+  source:
+    dataConnectorName: hotel_db
+    collection: tag_attributes
+  filterExpressionType: TagAttributesBoolExp
+  aggregateExpression: TagAttributesAggExp
+  orderableFields:
+    - fieldName: amenityId
+      orderByDirections:
+        enableAll: true
+    - fieldName: facilityId
+      orderByDirections:
+        enableAll: true
+    - fieldName: maxPriceLimit
+      orderByDirections:
+        enableAll: true
+    - fieldName: minPriceLimit
+      orderByDirections:
+        enableAll: true
+    - fieldName: policyId
+      orderByDirections:
+        enableAll: true
+    - fieldName: tagAttributeId
+      orderByDirections:
+        enableAll: true
+    - fieldName: tagId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_tagAttributes
+    selectUniques:
+      - queryRootField: hotel_listing_tagAttributesByTagAttributeId
+        uniqueIdentifier:
+          - tagAttributeId
+    orderByExpressionType: Hotel_listing_TagAttributesOrderBy
+    filterInputTypeName: Hotel_listing_TagAttributesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_tagAttributesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: TagAttributes
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: amenity
+  sourceType: TagAttributes
+  target:
+    model:
+      name: Amenities
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: amenityId
+      target:
+        modelField:
+          - fieldName: amenityId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: facility
+  sourceType: TagAttributes
+  target:
+    model:
+      name: Facilities
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: facilityId
+      target:
+        modelField:
+          - fieldName: facilityId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: policy
+  sourceType: TagAttributes
+  target:
+    model:
+      name: Policies
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: policyId
+      target:
+        modelField:
+          - fieldName: policyId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: tag
+  sourceType: TagAttributes
+  target:
+    model:
+      name: Tags
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: tagId
+      target:
+        modelField:
+          - fieldName: tagId
+

@@ -1,0 +1,218 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Promotions
+  fields:
+    - name: description
+      type: Text
+    - name: discountPercentage
+      type: Float8!
+    - name: endDate
+      type: Date!
+    - name: hotelId
+      type: Uuid
+    - name: promotionId
+      type: Uuid!
+    - name: roomCategoryId
+      type: Uuid
+    - name: startDate
+      type: Date!
+  graphql:
+    typeName: Hotel_listing_Promotions
+    inputTypeName: Hotel_listing_PromotionsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: promotions
+      fieldMapping:
+        description:
+          column:
+            name: description
+        discountPercentage:
+          column:
+            name: discount_percentage
+        endDate:
+          column:
+            name: end_date
+        hotelId:
+          column:
+            name: hotel_id
+        promotionId:
+          column:
+            name: promotion_id
+        roomCategoryId:
+          column:
+            name: room_category_id
+        startDate:
+          column:
+            name: start_date
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Promotions
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - description
+          - discountPercentage
+          - endDate
+          - hotelId
+          - promotionId
+          - roomCategoryId
+          - startDate
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: PromotionsBoolExp
+  operand:
+    object:
+      type: Promotions
+      comparableFields:
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: discountPercentage
+          booleanExpressionType: Float8BoolExp
+        - fieldName: endDate
+          booleanExpressionType: DateBoolExp
+        - fieldName: hotelId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: promotionId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: roomCategoryId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: startDate
+          booleanExpressionType: DateBoolExp
+      comparableRelationships:
+        - relationshipName: hotel
+        - relationshipName: roomCategory
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_PromotionsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: PromotionsAggExp
+  operand:
+    object:
+      aggregatedType: Promotions
+      aggregatableFields:
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: discountPercentage
+          aggregateExpression: Float8AggExp
+        - fieldName: endDate
+          aggregateExpression: DateAggExp
+        - fieldName: hotelId
+          aggregateExpression: UuidAggExp
+        - fieldName: promotionId
+          aggregateExpression: UuidAggExp
+        - fieldName: roomCategoryId
+          aggregateExpression: UuidAggExp
+        - fieldName: startDate
+          aggregateExpression: DateAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_PromotionsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Promotions
+  objectType: Promotions
+  source:
+    dataConnectorName: hotel_db
+    collection: promotions
+  filterExpressionType: PromotionsBoolExp
+  aggregateExpression: PromotionsAggExp
+  orderableFields:
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: discountPercentage
+      orderByDirections:
+        enableAll: true
+    - fieldName: endDate
+      orderByDirections:
+        enableAll: true
+    - fieldName: hotelId
+      orderByDirections:
+        enableAll: true
+    - fieldName: promotionId
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomCategoryId
+      orderByDirections:
+        enableAll: true
+    - fieldName: startDate
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_promotions
+    selectUniques:
+      - queryRootField: hotel_listing_promotionsByPromotionId
+        uniqueIdentifier:
+          - promotionId
+    orderByExpressionType: Hotel_listing_PromotionsOrderBy
+    filterInputTypeName: Hotel_listing_PromotionsFilterInput
+    aggregate:
+      queryRootField: hotel_listing_promotionsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Promotions
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotel
+  sourceType: Promotions
+  target:
+    model:
+      name: Hotels
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomCategory
+  sourceType: Promotions
+  target:
+    model:
+      name: RoomCategories
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomCategoryId
+      target:
+        modelField:
+          - fieldName: categoryId
+

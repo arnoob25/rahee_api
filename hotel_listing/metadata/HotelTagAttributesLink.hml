@@ -1,0 +1,166 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: HotelTagAttributesLink
+  fields:
+    - name: hotelId
+      type: Uuid
+    - name: linkId
+      type: Uuid!
+    - name: tagId
+      type: Uuid
+  graphql:
+    typeName: Hotel_listing_HotelTagAttributesLink
+    inputTypeName: Hotel_listing_HotelTagAttributesLinkInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: hotel_tag_attributes_link
+      fieldMapping:
+        hotelId:
+          column:
+            name: hotel_id
+        linkId:
+          column:
+            name: link_id
+        tagId:
+          column:
+            name: tag_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: HotelTagAttributesLink
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - hotelId
+          - linkId
+          - tagId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: HotelTagAttributesLinkBoolExp
+  operand:
+    object:
+      type: HotelTagAttributesLink
+      comparableFields:
+        - fieldName: hotelId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: linkId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: tagId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: hotel
+        - relationshipName: tag
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_HotelTagAttributesLinkBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: HotelTagAttributesLinkAggExp
+  operand:
+    object:
+      aggregatedType: HotelTagAttributesLink
+      aggregatableFields:
+        - fieldName: hotelId
+          aggregateExpression: UuidAggExp
+        - fieldName: linkId
+          aggregateExpression: UuidAggExp
+        - fieldName: tagId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_HotelTagAttributesLinkAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: HotelTagAttributesLink
+  objectType: HotelTagAttributesLink
+  source:
+    dataConnectorName: hotel_db
+    collection: hotel_tag_attributes_link
+  filterExpressionType: HotelTagAttributesLinkBoolExp
+  aggregateExpression: HotelTagAttributesLinkAggExp
+  orderableFields:
+    - fieldName: hotelId
+      orderByDirections:
+        enableAll: true
+    - fieldName: linkId
+      orderByDirections:
+        enableAll: true
+    - fieldName: tagId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_hotelTagAttributesLink
+    selectUniques:
+      - queryRootField: hotel_listing_hotelTagAttributesLinkByLinkId
+        uniqueIdentifier:
+          - linkId
+    orderByExpressionType: Hotel_listing_HotelTagAttributesLinkOrderBy
+    filterInputTypeName: Hotel_listing_HotelTagAttributesLinkFilterInput
+    aggregate:
+      queryRootField: hotel_listing_hotelTagAttributesLinkAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: HotelTagAttributesLink
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotel
+  sourceType: HotelTagAttributesLink
+  target:
+    model:
+      name: Hotels
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: tag
+  sourceType: HotelTagAttributesLink
+  target:
+    model:
+      name: Tags
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: tagId
+      target:
+        modelField:
+          - fieldName: tagId
+

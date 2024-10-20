@@ -1,0 +1,245 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Facilities
+  fields:
+    - name: alternativeNames
+      type: Jsonb
+    - name: categoryId
+      type: Uuid
+    - name: createdAt
+      type: Timestamp
+    - name: description
+      type: Text
+    - name: facilityId
+      type: Uuid!
+    - name: isStandard
+      type: Bool
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: Hotel_listing_Facilities
+    inputTypeName: Hotel_listing_FacilitiesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: facilities
+      fieldMapping:
+        alternativeNames:
+          column:
+            name: alternative_names
+        categoryId:
+          column:
+            name: category_id
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        facilityId:
+          column:
+            name: facility_id
+        isStandard:
+          column:
+            name: is_standard
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Facilities
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - alternativeNames
+          - categoryId
+          - createdAt
+          - description
+          - facilityId
+          - isStandard
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: FacilitiesBoolExp
+  operand:
+    object:
+      type: Facilities
+      comparableFields:
+        - fieldName: alternativeNames
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: categoryId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: facilityId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: isStandard
+          booleanExpressionType: BoolBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: facilityCategory
+        - relationshipName: hotelFacilitiesLinks
+        - relationshipName: tagAttributes
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_FacilitiesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: FacilitiesAggExp
+  operand:
+    object:
+      aggregatedType: Facilities
+      aggregatableFields:
+        - fieldName: alternativeNames
+          aggregateExpression: JsonbAggExp
+        - fieldName: categoryId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: facilityId
+          aggregateExpression: UuidAggExp
+        - fieldName: isStandard
+          aggregateExpression: BoolAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_FacilitiesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Facilities
+  objectType: Facilities
+  source:
+    dataConnectorName: hotel_db
+    collection: facilities
+  filterExpressionType: FacilitiesBoolExp
+  aggregateExpression: FacilitiesAggExp
+  orderableFields:
+    - fieldName: alternativeNames
+      orderByDirections:
+        enableAll: true
+    - fieldName: categoryId
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: facilityId
+      orderByDirections:
+        enableAll: true
+    - fieldName: isStandard
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_facilities
+    selectUniques:
+      - queryRootField: hotel_listing_facilitiesByFacilityId
+        uniqueIdentifier:
+          - facilityId
+    orderByExpressionType: Hotel_listing_FacilitiesOrderBy
+    filterInputTypeName: Hotel_listing_FacilitiesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_facilitiesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Facilities
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: facilityCategory
+  sourceType: Facilities
+  target:
+    model:
+      name: FacilityCategories
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: categoryId
+      target:
+        modelField:
+          - fieldName: categoryId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotelFacilitiesLinks
+  sourceType: Facilities
+  target:
+    model:
+      name: HotelFacilitiesLink
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: HotelFacilitiesLinkAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: facilityId
+      target:
+        modelField:
+          - fieldName: facilityId
+  graphql:
+    aggregateFieldName: hotelFacilitiesLinksAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: tagAttributes
+  sourceType: Facilities
+  target:
+    model:
+      name: TagAttributes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: TagAttributesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: facilityId
+      target:
+        modelField:
+          - fieldName: facilityId
+  graphql:
+    aggregateFieldName: tagAttributesAggregate
+

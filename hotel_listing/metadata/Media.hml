@@ -1,0 +1,205 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Media
+  fields:
+    - name: hotelId
+      type: Uuid
+    - name: isCover
+      type: Bool
+    - name: isFeatured
+      type: Bool
+    - name: mediaId
+      type: Uuid!
+    - name: roomTypeId
+      type: Uuid
+    - name: url
+      type: Text!
+  graphql:
+    typeName: Hotel_listing_Media
+    inputTypeName: Hotel_listing_MediaInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: media
+      fieldMapping:
+        hotelId:
+          column:
+            name: hotel_id
+        isCover:
+          column:
+            name: is_cover
+        isFeatured:
+          column:
+            name: is_featured
+        mediaId:
+          column:
+            name: media_id
+        roomTypeId:
+          column:
+            name: room_type_id
+        url:
+          column:
+            name: url
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Media
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - hotelId
+          - isCover
+          - isFeatured
+          - mediaId
+          - roomTypeId
+          - url
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: MediaBoolExp
+  operand:
+    object:
+      type: Media
+      comparableFields:
+        - fieldName: hotelId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: isCover
+          booleanExpressionType: BoolBoolExp
+        - fieldName: isFeatured
+          booleanExpressionType: BoolBoolExp
+        - fieldName: mediaId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: roomTypeId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: url
+          booleanExpressionType: TextBoolExp
+      comparableRelationships:
+        - relationshipName: hotel
+        - relationshipName: roomType
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_MediaBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: MediaAggExp
+  operand:
+    object:
+      aggregatedType: Media
+      aggregatableFields:
+        - fieldName: hotelId
+          aggregateExpression: UuidAggExp
+        - fieldName: isCover
+          aggregateExpression: BoolAggExp
+        - fieldName: isFeatured
+          aggregateExpression: BoolAggExp
+        - fieldName: mediaId
+          aggregateExpression: UuidAggExp
+        - fieldName: roomTypeId
+          aggregateExpression: UuidAggExp
+        - fieldName: url
+          aggregateExpression: TextAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_MediaAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Media
+  objectType: Media
+  source:
+    dataConnectorName: hotel_db
+    collection: media
+  filterExpressionType: MediaBoolExp
+  aggregateExpression: MediaAggExp
+  orderableFields:
+    - fieldName: hotelId
+      orderByDirections:
+        enableAll: true
+    - fieldName: isCover
+      orderByDirections:
+        enableAll: true
+    - fieldName: isFeatured
+      orderByDirections:
+        enableAll: true
+    - fieldName: mediaId
+      orderByDirections:
+        enableAll: true
+    - fieldName: roomTypeId
+      orderByDirections:
+        enableAll: true
+    - fieldName: url
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_media
+    selectUniques:
+      - queryRootField: hotel_listing_mediaByMediaId
+        uniqueIdentifier:
+          - mediaId
+    orderByExpressionType: Hotel_listing_MediaOrderBy
+    filterInputTypeName: Hotel_listing_MediaFilterInput
+    aggregate:
+      queryRootField: hotel_listing_mediaAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Media
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotel
+  sourceType: Media
+  target:
+    model:
+      name: Hotels
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: hotelId
+      target:
+        modelField:
+          - fieldName: hotelId
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomType
+  sourceType: Media
+  target:
+    model:
+      name: RoomTypes
+      relationshipType: Object
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: roomTypeId
+      target:
+        modelField:
+          - fieldName: roomTypeId
+

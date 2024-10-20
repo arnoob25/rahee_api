@@ -1,0 +1,187 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: Tags
+  fields:
+    - name: description
+      type: Text
+    - name: isActive
+      type: Bool
+    - name: name
+      type: Varchar!
+    - name: tagId
+      type: Uuid!
+  graphql:
+    typeName: Hotel_listing_Tags
+    inputTypeName: Hotel_listing_TagsInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: tags
+      fieldMapping:
+        description:
+          column:
+            name: description
+        isActive:
+          column:
+            name: is_active
+        name:
+          column:
+            name: name
+        tagId:
+          column:
+            name: tag_id
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: Tags
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - description
+          - isActive
+          - name
+          - tagId
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: TagsBoolExp
+  operand:
+    object:
+      type: Tags
+      comparableFields:
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: isActive
+          booleanExpressionType: BoolBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+        - fieldName: tagId
+          booleanExpressionType: UuidBoolExp
+      comparableRelationships:
+        - relationshipName: hotelTagAttributesLinks
+        - relationshipName: tagAttributes
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_TagsBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: TagsAggExp
+  operand:
+    object:
+      aggregatedType: Tags
+      aggregatableFields:
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: isActive
+          aggregateExpression: BoolAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+        - fieldName: tagId
+          aggregateExpression: UuidAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_TagsAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: Tags
+  objectType: Tags
+  source:
+    dataConnectorName: hotel_db
+    collection: tags
+  filterExpressionType: TagsBoolExp
+  aggregateExpression: TagsAggExp
+  orderableFields:
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: isActive
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+    - fieldName: tagId
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_tags
+    selectUniques:
+      - queryRootField: hotel_listing_tagsByTagId
+        uniqueIdentifier:
+          - tagId
+    orderByExpressionType: Hotel_listing_TagsOrderBy
+    filterInputTypeName: Hotel_listing_TagsFilterInput
+    aggregate:
+      queryRootField: hotel_listing_tagsAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: Tags
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: hotelTagAttributesLinks
+  sourceType: Tags
+  target:
+    model:
+      name: HotelTagAttributesLink
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: HotelTagAttributesLinkAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: tagId
+      target:
+        modelField:
+          - fieldName: tagId
+  graphql:
+    aggregateFieldName: hotelTagAttributesLinksAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: tagAttributes
+  sourceType: Tags
+  target:
+    model:
+      name: TagAttributes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: TagAttributesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: tagId
+      target:
+        modelField:
+          - fieldName: tagId
+  graphql:
+    aggregateFieldName: tagAttributesAggregate
+

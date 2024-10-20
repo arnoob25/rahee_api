@@ -1,0 +1,200 @@
+---
+kind: ObjectType
+version: v1
+definition:
+  name: RoomCategories
+  fields:
+    - name: alternativeNames
+      type: Jsonb
+    - name: categoryId
+      type: Uuid!
+    - name: createdAt
+      type: Timestamp
+    - name: description
+      type: Text
+    - name: name
+      type: Varchar!
+  graphql:
+    typeName: Hotel_listing_RoomCategories
+    inputTypeName: Hotel_listing_RoomCategoriesInput
+  dataConnectorTypeMapping:
+    - dataConnectorName: hotel_db
+      dataConnectorObjectType: room_categories
+      fieldMapping:
+        alternativeNames:
+          column:
+            name: alternative_names
+        categoryId:
+          column:
+            name: category_id
+        createdAt:
+          column:
+            name: created_at
+        description:
+          column:
+            name: description
+        name:
+          column:
+            name: name
+
+---
+kind: TypePermissions
+version: v1
+definition:
+  typeName: RoomCategories
+  permissions:
+    - role: admin
+      output:
+        allowedFields:
+          - alternativeNames
+          - categoryId
+          - createdAt
+          - description
+          - name
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: RoomCategoriesBoolExp
+  operand:
+    object:
+      type: RoomCategories
+      comparableFields:
+        - fieldName: alternativeNames
+          booleanExpressionType: JsonbBoolExp
+        - fieldName: categoryId
+          booleanExpressionType: UuidBoolExp
+        - fieldName: createdAt
+          booleanExpressionType: TimestampBoolExp
+        - fieldName: description
+          booleanExpressionType: TextBoolExp
+        - fieldName: name
+          booleanExpressionType: VarcharBoolExp
+      comparableRelationships:
+        - relationshipName: promotions
+        - relationshipName: roomTypes
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_RoomCategoriesBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: RoomCategoriesAggExp
+  operand:
+    object:
+      aggregatedType: RoomCategories
+      aggregatableFields:
+        - fieldName: alternativeNames
+          aggregateExpression: JsonbAggExp
+        - fieldName: categoryId
+          aggregateExpression: UuidAggExp
+        - fieldName: createdAt
+          aggregateExpression: TimestampAggExp
+        - fieldName: description
+          aggregateExpression: TextAggExp
+        - fieldName: name
+          aggregateExpression: VarcharAggExp
+  count:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_RoomCategoriesAggExp
+
+---
+kind: Model
+version: v1
+definition:
+  name: RoomCategories
+  objectType: RoomCategories
+  source:
+    dataConnectorName: hotel_db
+    collection: room_categories
+  filterExpressionType: RoomCategoriesBoolExp
+  aggregateExpression: RoomCategoriesAggExp
+  orderableFields:
+    - fieldName: alternativeNames
+      orderByDirections:
+        enableAll: true
+    - fieldName: categoryId
+      orderByDirections:
+        enableAll: true
+    - fieldName: createdAt
+      orderByDirections:
+        enableAll: true
+    - fieldName: description
+      orderByDirections:
+        enableAll: true
+    - fieldName: name
+      orderByDirections:
+        enableAll: true
+  graphql:
+    selectMany:
+      queryRootField: hotel_listing_roomCategories
+    selectUniques:
+      - queryRootField: hotel_listing_roomCategoriesByCategoryId
+        uniqueIdentifier:
+          - categoryId
+    orderByExpressionType: Hotel_listing_RoomCategoriesOrderBy
+    filterInputTypeName: Hotel_listing_RoomCategoriesFilterInput
+    aggregate:
+      queryRootField: hotel_listing_roomCategoriesAggregate
+
+---
+kind: ModelPermissions
+version: v1
+definition:
+  modelName: RoomCategories
+  permissions:
+    - role: admin
+      select:
+        filter: null
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: promotions
+  sourceType: RoomCategories
+  target:
+    model:
+      name: Promotions
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: PromotionsAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: categoryId
+      target:
+        modelField:
+          - fieldName: roomCategoryId
+  graphql:
+    aggregateFieldName: promotionsAggregate
+
+---
+kind: Relationship
+version: v1
+definition:
+  name: roomTypes
+  sourceType: RoomCategories
+  target:
+    model:
+      name: RoomTypes
+      relationshipType: Array
+      aggregate:
+        aggregateExpression: RoomTypesAggExp
+  mapping:
+    - source:
+        fieldPath:
+          - fieldName: categoryId
+      target:
+        modelField:
+          - fieldName: roomCategoryId
+  graphql:
+    aggregateFieldName: roomTypesAggregate
+

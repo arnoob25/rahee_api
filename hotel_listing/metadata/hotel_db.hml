@@ -1,0 +1,1680 @@
+kind: DataConnectorLink
+version: v1
+definition:
+  name: hotel_db
+  url:
+    readWriteUrls:
+      read:
+        valueFromEnv: HOTEL_LISTING_HOTEL_DB_READ_URL
+      write:
+        valueFromEnv: HOTEL_LISTING_HOTEL_DB_WRITE_URL
+  headers:
+    Authorization:
+      valueFromEnv: HOTEL_LISTING_HOTEL_DB_AUTHORIZATION_HEADER
+  schema:
+    version: v0.1
+    schema:
+      scalar_types:
+        bool:
+          representation:
+            type: boolean
+          aggregate_functions:
+            bool_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            bool_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            every:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: bool
+        date:
+          representation:
+            type: date
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: date
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: date
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: date
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: date
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: date
+        float8:
+          representation:
+            type: float64
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            sqrdiff:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: float8
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: float8
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: float8
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: float8
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: float8
+        int8:
+          representation:
+            type: int64
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            bit_and:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: int8
+            bit_or:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: int8
+            sqrdiff:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            sum_int:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: int8
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            xor_agg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: int8
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: int8
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: int8
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: int8
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: int8
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: int8
+        jsonb:
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: jsonb
+        numeric:
+          representation:
+            type: bigdecimal
+          aggregate_functions:
+            avg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            sqrdiff:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            stddev:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            stddev_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            stddev_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            sum:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            var_pop:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            var_samp:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+            variance:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: numeric
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: numeric
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: numeric
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: numeric
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: numeric
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: numeric
+        reservation_status:
+          representation:
+            type: enum
+            one_of:
+              - Pending
+              - Confirmed
+              - Canceled
+          aggregate_functions:
+            max:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: reservation_status
+            min:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: reservation_status
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: reservation_status
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: reservation_status
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: reservation_status
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: reservation_status
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: reservation_status
+        text:
+          representation:
+            type: string
+          aggregate_functions:
+            concat_agg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _ilike:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _in:
+              type: in
+            _iregex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _like:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _nilike:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _niregex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _nlike:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _nregex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _nsimilar:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _regex:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            _similar:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            st_coveredby:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            st_covers:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            st_intersects:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+            st_relatematch:
+              type: custom
+              argument_type:
+                type: named
+                name: text
+        timestamp:
+          representation:
+            type: timestamp
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamp
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamp
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamp
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamp
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: timestamp
+        uuid:
+          representation:
+            type: uuid
+          aggregate_functions: {}
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _in:
+              type: in
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: uuid
+        varchar:
+          representation:
+            type: string
+          aggregate_functions:
+            concat_agg:
+              result_type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+          comparison_operators:
+            _eq:
+              type: equal
+            _gt:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _gte:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _ilike:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _in:
+              type: in
+            _iregex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _like:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _lt:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _lte:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _neq:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _nilike:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _niregex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _nlike:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _nregex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _nsimilar:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _regex:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            _similar:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            st_coveredby:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            st_covers:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            st_intersects:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+            st_relatematch:
+              type: custom
+              argument_type:
+                type: named
+                name: varchar
+      object_types:
+        amenities:
+          fields:
+            amenity_id:
+              type:
+                type: named
+                name: uuid
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            is_standard:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            name:
+              type:
+                type: named
+                name: varchar
+        analytics:
+          fields:
+            analytics_id:
+              type:
+                type: named
+                name: uuid
+            bookings_made:
+              type:
+                type: named
+                name: int8
+            hotel_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            page_views:
+              type:
+                type: named
+                name: int8
+            timestamp:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+        bed_types:
+          fields:
+            alternative_names:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            bed_type_id:
+              type:
+                type: named
+                name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            name:
+              type:
+                type: named
+                name: varchar
+        facilities:
+          fields:
+            alternative_names:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            category_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            facility_id:
+              type:
+                type: named
+                name: uuid
+            is_standard:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            name:
+              type:
+                type: named
+                name: varchar
+        facility_categories:
+          fields:
+            alternative_names:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            category_id:
+              type:
+                type: named
+                name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            name:
+              type:
+                type: named
+                name: varchar
+        hotel_facilities_link:
+          fields:
+            facility_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            hotel_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            link_id:
+              type:
+                type: named
+                name: uuid
+        hotel_tag_attributes_link:
+          fields:
+            hotel_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            link_id:
+              type:
+                type: named
+                name: uuid
+            tag_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+        hotels:
+          fields:
+            address:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            contact_info:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            hotel_id:
+              type:
+                type: named
+                name: uuid
+            latitude:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            longitude:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            name:
+              type:
+                type: named
+                name: varchar
+            review_score:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            star_rating:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+        media:
+          fields:
+            hotel_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            is_cover:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            is_featured:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            media_id:
+              type:
+                type: named
+                name: uuid
+            room_type_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            url:
+              type:
+                type: named
+                name: text
+        pg_extension_spatial_ref_sys:
+          description: Shows all defined Spatial Reference Identifiers (SRIDs). Matches PostGIS' spatial_ref_sys table.
+          fields:
+            auth_name:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: varchar
+            auth_srid:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: int8
+            proj4text:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: varchar
+            srid:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: int8
+            srtext:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: varchar
+        policies:
+          fields:
+            alternative_descriptions:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            is_active:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            is_standard:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            name:
+              type:
+                type: named
+                name: varchar
+            policy_id:
+              type:
+                type: named
+                name: uuid
+            updated_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+        promotions:
+          fields:
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            discount_percentage:
+              type:
+                type: named
+                name: float8
+            end_date:
+              type:
+                type: named
+                name: date
+            hotel_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            promotion_id:
+              type:
+                type: named
+                name: uuid
+            room_category_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            start_date:
+              type:
+                type: named
+                name: date
+        reservations:
+          fields:
+            check_in_date:
+              type:
+                type: named
+                name: date
+            check_out_date:
+              type:
+                type: named
+                name: date
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            guest_name:
+              type:
+                type: named
+                name: varchar
+            reservation_id:
+              type:
+                type: named
+                name: uuid
+            room_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            status:
+              type:
+                type: named
+                name: reservation_status
+        room_amenities_link:
+          fields:
+            amenity_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            link_id:
+              type:
+                type: named
+                name: uuid
+            room_type_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+        room_categories:
+          fields:
+            alternative_names:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: jsonb
+            category_id:
+              type:
+                type: named
+                name: uuid
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            name:
+              type:
+                type: named
+                name: varchar
+        room_types:
+          fields:
+            bed_type_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            complementary_child:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: int8
+            extra_bed_available:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            extra_bed_type_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            hotel_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            max_adults:
+              type:
+                type: named
+                name: int8
+            max_guests:
+              type:
+                type: named
+                name: int8
+            name:
+              type:
+                type: named
+                name: varchar
+            price_per_night:
+              type:
+                type: named
+                name: float8
+            room_category_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            room_type_id:
+              type:
+                type: named
+                name: uuid
+        rooms:
+          fields:
+            availability:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            floor_number:
+              type:
+                type: named
+                name: int8
+            room_id:
+              type:
+                type: named
+                name: uuid
+            room_number:
+              type:
+                type: named
+                name: varchar
+            room_type_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+        tag_attributes:
+          fields:
+            amenity_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            facility_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            max_price_limit:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            min_price_limit:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            policy_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            tag_attribute_id:
+              type:
+                type: named
+                name: uuid
+            tag_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+        tags:
+          fields:
+            description:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            is_active:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: bool
+            name:
+              type:
+                type: named
+                name: varchar
+            tag_id:
+              type:
+                type: named
+                name: uuid
+        user_reviews:
+          fields:
+            created_at:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: timestamp
+            hotel_id:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: uuid
+            rating:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: float8
+            review_id:
+              type:
+                type: named
+                name: uuid
+            review_text:
+              type:
+                type: nullable
+                underlying_type:
+                  type: named
+                  name: text
+            user_id:
+              type:
+                type: named
+                name: uuid
+      collections:
+        - name: amenities
+          arguments: {}
+          type: amenities
+          uniqueness_constraints:
+            amenities_pkey:
+              unique_columns:
+                - amenity_id
+          foreign_keys: {}
+        - name: analytics
+          arguments: {}
+          type: analytics
+          uniqueness_constraints:
+            analytics_pkey:
+              unique_columns:
+                - analytics_id
+          foreign_keys:
+            analytics_hotel_id_fkey:
+              column_mapping:
+                hotel_id: hotel_id
+              foreign_collection: hotels
+        - name: bed_types
+          arguments: {}
+          type: bed_types
+          uniqueness_constraints:
+            bed_types_pkey:
+              unique_columns:
+                - bed_type_id
+          foreign_keys: {}
+        - name: facilities
+          arguments: {}
+          type: facilities
+          uniqueness_constraints:
+            facilities_pkey:
+              unique_columns:
+                - facility_id
+          foreign_keys:
+            facilities_category_id_fkey:
+              column_mapping:
+                category_id: category_id
+              foreign_collection: facility_categories
+        - name: facility_categories
+          arguments: {}
+          type: facility_categories
+          uniqueness_constraints:
+            facility_categories_pkey:
+              unique_columns:
+                - category_id
+          foreign_keys: {}
+        - name: hotel_facilities_link
+          arguments: {}
+          type: hotel_facilities_link
+          uniqueness_constraints:
+            hotel_facilities_link_pkey:
+              unique_columns:
+                - link_id
+          foreign_keys:
+            hotel_facilities_link_facility_id_fkey:
+              column_mapping:
+                facility_id: facility_id
+              foreign_collection: facilities
+            hotel_facilities_link_hotel_id_fkey:
+              column_mapping:
+                hotel_id: hotel_id
+              foreign_collection: hotels
+        - name: hotel_tag_attributes_link
+          arguments: {}
+          type: hotel_tag_attributes_link
+          uniqueness_constraints:
+            hotel_tag_attributes_link_pkey:
+              unique_columns:
+                - link_id
+          foreign_keys:
+            hotel_tag_attributes_link_hotel_id_fkey:
+              column_mapping:
+                hotel_id: hotel_id
+              foreign_collection: hotels
+            hotel_tag_attributes_link_tag_id_fkey:
+              column_mapping:
+                tag_id: tag_id
+              foreign_collection: tags
+        - name: hotels
+          arguments: {}
+          type: hotels
+          uniqueness_constraints:
+            hotels_pkey:
+              unique_columns:
+                - hotel_id
+          foreign_keys: {}
+        - name: media
+          arguments: {}
+          type: media
+          uniqueness_constraints:
+            media_pkey:
+              unique_columns:
+                - media_id
+          foreign_keys:
+            media_hotel_id_fkey:
+              column_mapping:
+                hotel_id: hotel_id
+              foreign_collection: hotels
+            media_room_type_id_fkey:
+              column_mapping:
+                room_type_id: room_type_id
+              foreign_collection: room_types
+        - name: pg_extension_spatial_ref_sys
+          description: Shows all defined Spatial Reference Identifiers (SRIDs). Matches PostGIS' spatial_ref_sys table.
+          arguments: {}
+          type: pg_extension_spatial_ref_sys
+          uniqueness_constraints: {}
+          foreign_keys: {}
+        - name: policies
+          arguments: {}
+          type: policies
+          uniqueness_constraints:
+            policies_pkey:
+              unique_columns:
+                - policy_id
+          foreign_keys: {}
+        - name: promotions
+          arguments: {}
+          type: promotions
+          uniqueness_constraints:
+            promotions_pkey:
+              unique_columns:
+                - promotion_id
+          foreign_keys:
+            promotions_hotel_id_fkey:
+              column_mapping:
+                hotel_id: hotel_id
+              foreign_collection: hotels
+            promotions_room_category_id_fkey:
+              column_mapping:
+                room_category_id: category_id
+              foreign_collection: room_categories
+        - name: reservations
+          arguments: {}
+          type: reservations
+          uniqueness_constraints:
+            reservations_pkey:
+              unique_columns:
+                - reservation_id
+          foreign_keys:
+            reservations_room_id_fkey:
+              column_mapping:
+                room_id: room_id
+              foreign_collection: rooms
+        - name: room_amenities_link
+          arguments: {}
+          type: room_amenities_link
+          uniqueness_constraints:
+            room_amenities_link_pkey:
+              unique_columns:
+                - link_id
+          foreign_keys:
+            room_amenities_link_amenity_id_fkey:
+              column_mapping:
+                amenity_id: amenity_id
+              foreign_collection: amenities
+            room_amenities_link_room_type_id_fkey:
+              column_mapping:
+                room_type_id: room_type_id
+              foreign_collection: room_types
+        - name: room_categories
+          arguments: {}
+          type: room_categories
+          uniqueness_constraints:
+            room_categories_pkey:
+              unique_columns:
+                - category_id
+          foreign_keys: {}
+        - name: room_types
+          arguments: {}
+          type: room_types
+          uniqueness_constraints:
+            room_types_pkey:
+              unique_columns:
+                - room_type_id
+          foreign_keys:
+            room_types_bed_type_id_fkey:
+              column_mapping:
+                bed_type_id: bed_type_id
+              foreign_collection: bed_types
+            room_types_extra_bed_type_id_fkey:
+              column_mapping:
+                extra_bed_type_id: bed_type_id
+              foreign_collection: bed_types
+            room_types_hotel_id_fkey:
+              column_mapping:
+                hotel_id: hotel_id
+              foreign_collection: hotels
+            room_types_room_category_id_fkey:
+              column_mapping:
+                room_category_id: category_id
+              foreign_collection: room_categories
+        - name: rooms
+          arguments: {}
+          type: rooms
+          uniqueness_constraints:
+            rooms_pkey:
+              unique_columns:
+                - room_id
+          foreign_keys:
+            rooms_room_type_id_fkey:
+              column_mapping:
+                room_type_id: room_type_id
+              foreign_collection: room_types
+        - name: tag_attributes
+          arguments: {}
+          type: tag_attributes
+          uniqueness_constraints:
+            tag_attributes_pkey:
+              unique_columns:
+                - tag_attribute_id
+          foreign_keys:
+            tag_attributes_amenity_id_fkey:
+              column_mapping:
+                amenity_id: amenity_id
+              foreign_collection: amenities
+            tag_attributes_facility_id_fkey:
+              column_mapping:
+                facility_id: facility_id
+              foreign_collection: facilities
+            tag_attributes_policy_id_fkey:
+              column_mapping:
+                policy_id: policy_id
+              foreign_collection: policies
+            tag_attributes_tag_id_fkey:
+              column_mapping:
+                tag_id: tag_id
+              foreign_collection: tags
+        - name: tags
+          arguments: {}
+          type: tags
+          uniqueness_constraints:
+            tags_pkey:
+              unique_columns:
+                - tag_id
+          foreign_keys: {}
+        - name: user_reviews
+          arguments: {}
+          type: user_reviews
+          uniqueness_constraints:
+            user_reviews_pkey:
+              unique_columns:
+                - review_id
+          foreign_keys:
+            user_reviews_hotel_id_fkey:
+              column_mapping:
+                hotel_id: hotel_id
+              foreign_collection: hotels
+      functions: []
+      procedures: []
+    capabilities:
+      version: 0.1.6
+      capabilities:
+        query:
+          aggregates: {}
+          variables: {}
+          explain: {}
+          nested_fields:
+            filter_by: {}
+            order_by: {}
+        mutation:
+          transactional: {}
+          explain: {}
+        relationships:
+          relation_comparisons: {}
+          order_by_aggregate: {}

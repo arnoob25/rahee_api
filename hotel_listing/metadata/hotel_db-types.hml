@@ -1,0 +1,944 @@
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Uuid
+  graphql:
+    typeName: Hotel_listing_Uuid
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: uuid
+  representation: Uuid
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_UuidComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: UuidBoolExp
+  operand:
+    scalar:
+      type: Uuid
+      comparisonOperators:
+        - name: _eq
+          argumentType: Uuid!
+        - name: _gt
+          argumentType: Uuid!
+        - name: _gte
+          argumentType: Uuid!
+        - name: _in
+          argumentType: "[Uuid!]!"
+        - name: _lt
+          argumentType: Uuid!
+        - name: _lte
+          argumentType: Uuid!
+        - name: _neq
+          argumentType: Uuid!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: uuid
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_UuidBoolExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Text
+  graphql:
+    typeName: Hotel_listing_Text
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: text
+  representation: Text
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_TextComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: TextBoolExp
+  operand:
+    scalar:
+      type: Text
+      comparisonOperators:
+        - name: _eq
+          argumentType: Text!
+        - name: _gt
+          argumentType: Text!
+        - name: _gte
+          argumentType: Text!
+        - name: _ilike
+          argumentType: Text!
+        - name: _in
+          argumentType: "[Text!]!"
+        - name: _iregex
+          argumentType: Text!
+        - name: _like
+          argumentType: Text!
+        - name: _lt
+          argumentType: Text!
+        - name: _lte
+          argumentType: Text!
+        - name: _neq
+          argumentType: Text!
+        - name: _nilike
+          argumentType: Text!
+        - name: _niregex
+          argumentType: Text!
+        - name: _nlike
+          argumentType: Text!
+        - name: _nregex
+          argumentType: Text!
+        - name: _nsimilar
+          argumentType: Text!
+        - name: _regex
+          argumentType: Text!
+        - name: _similar
+          argumentType: Text!
+        - name: st_coveredby
+          argumentType: Text!
+        - name: st_covers
+          argumentType: Text!
+        - name: st_intersects
+          argumentType: Text!
+        - name: st_relatematch
+          argumentType: Text!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: text
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_TextBoolExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Bool
+  graphql:
+    typeName: Hotel_listing_Bool
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: bool
+  representation: Bool
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_BoolComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: BoolBoolExp
+  operand:
+    scalar:
+      type: Bool
+      comparisonOperators:
+        - name: _eq
+          argumentType: Bool!
+        - name: _gt
+          argumentType: Bool!
+        - name: _gte
+          argumentType: Bool!
+        - name: _in
+          argumentType: "[Bool!]!"
+        - name: _lt
+          argumentType: Bool!
+        - name: _lte
+          argumentType: Bool!
+        - name: _neq
+          argumentType: Bool!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: bool
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_BoolBoolExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Varchar
+  graphql:
+    typeName: Hotel_listing_Varchar
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: varchar
+  representation: Varchar
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_VarcharComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: VarcharBoolExp
+  operand:
+    scalar:
+      type: Varchar
+      comparisonOperators:
+        - name: _eq
+          argumentType: Varchar!
+        - name: _gt
+          argumentType: Varchar!
+        - name: _gte
+          argumentType: Varchar!
+        - name: _ilike
+          argumentType: Varchar!
+        - name: _in
+          argumentType: "[Varchar!]!"
+        - name: _iregex
+          argumentType: Varchar!
+        - name: _like
+          argumentType: Varchar!
+        - name: _lt
+          argumentType: Varchar!
+        - name: _lte
+          argumentType: Varchar!
+        - name: _neq
+          argumentType: Varchar!
+        - name: _nilike
+          argumentType: Varchar!
+        - name: _niregex
+          argumentType: Varchar!
+        - name: _nlike
+          argumentType: Varchar!
+        - name: _nregex
+          argumentType: Varchar!
+        - name: _nsimilar
+          argumentType: Varchar!
+        - name: _regex
+          argumentType: Varchar!
+        - name: _similar
+          argumentType: Varchar!
+        - name: st_coveredby
+          argumentType: Varchar!
+        - name: st_covers
+          argumentType: Varchar!
+        - name: st_intersects
+          argumentType: Varchar!
+        - name: st_relatematch
+          argumentType: Varchar!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: varchar
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_VarcharBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: UuidAggExp
+  operand:
+    scalar:
+      aggregatedType: Uuid
+      aggregationFunctions: []
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: uuid
+          functionMapping: {}
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_UuidAggExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: TextAggExp
+  operand:
+    scalar:
+      aggregatedType: Text
+      aggregationFunctions:
+        - name: concat_agg
+          returnType: Text
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: text
+          functionMapping:
+            concat_agg:
+              name: concat_agg
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_TextAggExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: BoolAggExp
+  operand:
+    scalar:
+      aggregatedType: Bool
+      aggregationFunctions:
+        - name: bool_and
+          returnType: Bool
+        - name: bool_or
+          returnType: Bool
+        - name: every
+          returnType: Bool
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: bool
+          functionMapping:
+            bool_and:
+              name: bool_and
+            bool_or:
+              name: bool_or
+            every:
+              name: every
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_BoolAggExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: VarcharAggExp
+  operand:
+    scalar:
+      aggregatedType: Varchar
+      aggregationFunctions:
+        - name: concat_agg
+          returnType: Text
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: varchar
+          functionMapping:
+            concat_agg:
+              name: concat_agg
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_VarcharAggExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Int8
+  graphql:
+    typeName: Hotel_listing_Int8
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: int8
+  representation: Int8
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_Int8ComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: Int8BoolExp
+  operand:
+    scalar:
+      type: Int8
+      comparisonOperators:
+        - name: _eq
+          argumentType: Int8!
+        - name: _gt
+          argumentType: Int8!
+        - name: _gte
+          argumentType: Int8!
+        - name: _in
+          argumentType: "[Int8!]!"
+        - name: _lt
+          argumentType: Int8!
+        - name: _lte
+          argumentType: Int8!
+        - name: _neq
+          argumentType: Int8!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: int8
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_Int8BoolExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Timestamp
+  graphql:
+    typeName: Hotel_listing_Timestamp
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: timestamp
+  representation: Timestamp
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_TimestampComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: TimestampBoolExp
+  operand:
+    scalar:
+      type: Timestamp
+      comparisonOperators:
+        - name: _eq
+          argumentType: Timestamp!
+        - name: _gt
+          argumentType: Timestamp!
+        - name: _gte
+          argumentType: Timestamp!
+        - name: _in
+          argumentType: "[Timestamp!]!"
+        - name: _lt
+          argumentType: Timestamp!
+        - name: _lte
+          argumentType: Timestamp!
+        - name: _neq
+          argumentType: Timestamp!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: timestamp
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_TimestampBoolExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Numeric
+  graphql:
+    typeName: Hotel_listing_Numeric
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: numeric
+  representation: Numeric
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_NumericComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: NumericBoolExp
+  operand:
+    scalar:
+      type: Numeric
+      comparisonOperators:
+        - name: _eq
+          argumentType: Numeric!
+        - name: _gt
+          argumentType: Numeric!
+        - name: _gte
+          argumentType: Numeric!
+        - name: _in
+          argumentType: "[Numeric!]!"
+        - name: _lt
+          argumentType: Numeric!
+        - name: _lte
+          argumentType: Numeric!
+        - name: _neq
+          argumentType: Numeric!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: numeric
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_NumericBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: Int8AggExp
+  operand:
+    scalar:
+      aggregatedType: Int8
+      aggregationFunctions:
+        - name: avg
+          returnType: Numeric
+        - name: bit_and
+          returnType: Int8
+        - name: bit_or
+          returnType: Int8
+        - name: sqrdiff
+          returnType: Numeric
+        - name: stddev
+          returnType: Numeric
+        - name: stddev_pop
+          returnType: Numeric
+        - name: stddev_samp
+          returnType: Numeric
+        - name: sum
+          returnType: Numeric
+        - name: sum_int
+          returnType: Int8
+        - name: var_pop
+          returnType: Numeric
+        - name: var_samp
+          returnType: Numeric
+        - name: variance
+          returnType: Numeric
+        - name: xor_agg
+          returnType: Int8
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: int8
+          functionMapping:
+            avg:
+              name: avg
+            bit_and:
+              name: bit_and
+            bit_or:
+              name: bit_or
+            sqrdiff:
+              name: sqrdiff
+            stddev:
+              name: stddev
+            stddev_pop:
+              name: stddev_pop
+            stddev_samp:
+              name: stddev_samp
+            sum:
+              name: sum
+            sum_int:
+              name: sum_int
+            var_pop:
+              name: var_pop
+            var_samp:
+              name: var_samp
+            variance:
+              name: variance
+            xor_agg:
+              name: xor_agg
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_Int8AggExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: TimestampAggExp
+  operand:
+    scalar:
+      aggregatedType: Timestamp
+      aggregationFunctions: []
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: timestamp
+          functionMapping: {}
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_TimestampAggExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Jsonb
+  graphql:
+    typeName: Hotel_listing_Jsonb
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: jsonb
+  representation: Jsonb
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_JsonbComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: JsonbBoolExp
+  operand:
+    scalar:
+      type: Jsonb
+      comparisonOperators:
+        - name: _eq
+          argumentType: Jsonb!
+        - name: _gt
+          argumentType: Jsonb!
+        - name: _gte
+          argumentType: Jsonb!
+        - name: _in
+          argumentType: "[Jsonb!]!"
+        - name: _lt
+          argumentType: Jsonb!
+        - name: _lte
+          argumentType: Jsonb!
+        - name: _neq
+          argumentType: Jsonb!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: jsonb
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_JsonbBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: JsonbAggExp
+  operand:
+    scalar:
+      aggregatedType: Jsonb
+      aggregationFunctions: []
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: jsonb
+          functionMapping: {}
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_JsonbAggExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Float8
+  graphql:
+    typeName: Hotel_listing_Float8
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: float8
+  representation: Float8
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_Float8ComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: Float8BoolExp
+  operand:
+    scalar:
+      type: Float8
+      comparisonOperators:
+        - name: _eq
+          argumentType: Float8!
+        - name: _gt
+          argumentType: Float8!
+        - name: _gte
+          argumentType: Float8!
+        - name: _in
+          argumentType: "[Float8!]!"
+        - name: _lt
+          argumentType: Float8!
+        - name: _lte
+          argumentType: Float8!
+        - name: _neq
+          argumentType: Float8!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: float8
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_Float8BoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: Float8AggExp
+  operand:
+    scalar:
+      aggregatedType: Float8
+      aggregationFunctions:
+        - name: avg
+          returnType: Float8
+        - name: sqrdiff
+          returnType: Float8
+        - name: stddev
+          returnType: Float8
+        - name: stddev_pop
+          returnType: Float8
+        - name: stddev_samp
+          returnType: Float8
+        - name: sum
+          returnType: Float8
+        - name: var_pop
+          returnType: Float8
+        - name: var_samp
+          returnType: Float8
+        - name: variance
+          returnType: Float8
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: float8
+          functionMapping:
+            avg:
+              name: avg
+            sqrdiff:
+              name: sqrdiff
+            stddev:
+              name: stddev
+            stddev_pop:
+              name: stddev_pop
+            stddev_samp:
+              name: stddev_samp
+            sum:
+              name: sum
+            var_pop:
+              name: var_pop
+            var_samp:
+              name: var_samp
+            variance:
+              name: variance
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_Float8AggExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: Date
+  graphql:
+    typeName: Hotel_listing_Date
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: date
+  representation: Date
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_DateComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: DateBoolExp
+  operand:
+    scalar:
+      type: Date
+      comparisonOperators:
+        - name: _eq
+          argumentType: Date!
+        - name: _gt
+          argumentType: Date!
+        - name: _gte
+          argumentType: Date!
+        - name: _in
+          argumentType: "[Date!]!"
+        - name: _lt
+          argumentType: Date!
+        - name: _lte
+          argumentType: Date!
+        - name: _neq
+          argumentType: Date!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: date
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_DateBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: DateAggExp
+  operand:
+    scalar:
+      aggregatedType: Date
+      aggregationFunctions: []
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: date
+          functionMapping: {}
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_DateAggExp
+
+---
+kind: ScalarType
+version: v1
+definition:
+  name: ReservationStatus
+  graphql:
+    typeName: Hotel_listing_ReservationStatus
+
+---
+kind: DataConnectorScalarRepresentation
+version: v1
+definition:
+  dataConnectorName: hotel_db
+  dataConnectorScalarType: reservation_status
+  representation: ReservationStatus
+  graphql:
+    comparisonExpressionTypeName: Hotel_listing_ReservationStatusComparisonExp
+
+---
+kind: BooleanExpressionType
+version: v1
+definition:
+  name: ReservationStatusBoolExp
+  operand:
+    scalar:
+      type: ReservationStatus
+      comparisonOperators:
+        - name: _eq
+          argumentType: ReservationStatus!
+        - name: _gt
+          argumentType: ReservationStatus!
+        - name: _gte
+          argumentType: ReservationStatus!
+        - name: _in
+          argumentType: "[ReservationStatus!]!"
+        - name: _lt
+          argumentType: ReservationStatus!
+        - name: _lte
+          argumentType: ReservationStatus!
+        - name: _neq
+          argumentType: ReservationStatus!
+      dataConnectorOperatorMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: reservation_status
+          operatorMapping: {}
+  logicalOperators:
+    enable: true
+  isNull:
+    enable: true
+  graphql:
+    typeName: Hotel_listing_ReservationStatusBoolExp
+
+---
+kind: AggregateExpression
+version: v1
+definition:
+  name: ReservationStatusAggExp
+  operand:
+    scalar:
+      aggregatedType: ReservationStatus
+      aggregationFunctions:
+        - name: max
+          returnType: ReservationStatus
+        - name: min
+          returnType: ReservationStatus
+      dataConnectorAggregationFunctionMapping:
+        - dataConnectorName: hotel_db
+          dataConnectorScalarType: reservation_status
+          functionMapping:
+            max:
+              name: max
+            min:
+              name: min
+  count:
+    enable: true
+  countDistinct:
+    enable: true
+  graphql:
+    selectTypeName: Hotel_listing_ReservationStatusAggExp
+
