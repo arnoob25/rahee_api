@@ -2,36 +2,80 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-input CreateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int!
+input CreateHotelInput {
+  """Address of the hotel. Example: '123 Ocean Ave, Beach City, USA'"""
+  address: String!
+
+  """
+  Description of the hotel. Example: 'A cozy hotel with a beach view, perfect for families.'
+  """
+  description: String!
+
+  """Name of the hotel. Example: 'Porco's Hotel'"""
+  name: String!
+
+  """Average user review score. 0-10. Example: 8.7"""
+  review_score: Float!
+
+  """Rating of the hotel. 0-5 stars. Example: 4.5"""
+  star_rating: Float!
+}
+
+"""Data for a hotel"""
+type Hotel {
+  """Unique identifier for a hotel"""
+  _id: ID!
+
+  """Address of the hotel"""
+  address: String!
+
+  """Description of the hotel"""
+  description: String!
+
+  """Name of the hotel"""
+  name: String!
+
+  """Average user review score. 0-10"""
+  review_score: Float!
+
+  """Rating of the hotel. 0-5 stars"""
+  star_rating: Float!
 }
 
 type Mutation {
-  createUser(createUserInput: CreateUserInput!): User!
-  removeUser(id: Int!): User!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  """Create a new hotel"""
+  createHotel(createHotelInput: CreateHotelInput!): Hotel!
+
+  """Delete a hotel with its data"""
+  removeOneHotel(id: String!): Hotel!
+
+  """Find a hotel by its ID, and update its data."""
+  updateOneHotel(id: String!, updateHotelInput: UpdateHotelInput!): Hotel!
 }
 
 type Query {
-  """Finds all the users of the app"""
-  getUsers: [User!]!
-  user(id: Int!): User!
+  """Get all the hotels in the database."""
+  findAllHotels: [Hotel!]!
+
+  """Find a hotel by its ID"""
+  findOneHotel(id: String!): Hotel
 }
 
-input UpdateUserInput {
-  """Example field (placeholder)"""
-  exampleField: Int
-  id: Int!
-}
+input UpdateHotelInput {
+  """Address of the hotel. Example: '123 Ocean Ave, Beach City, USA'"""
+  address: String
 
-type User {
-  """Age of the user"""
-  age: Float!
+  """
+  Description of the hotel. Example: 'A cozy hotel with a beach view, perfect for families.'
+  """
+  description: String
 
-  """Email of the user"""
-  email: String!
+  """Name of the hotel. Example: 'Porco's Hotel'"""
+  name: String
 
-  """Name of the user"""
-  name: String!
+  """Average user review score. 0-10. Example: 8.7"""
+  review_score: Float
+
+  """Rating of the hotel. 0-5 stars. Example: 4.5"""
+  star_rating: Float
 }

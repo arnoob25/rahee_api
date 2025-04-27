@@ -1,5 +1,4 @@
 import { Catch, ExceptionFilter, HttpException } from "@nestjs/common";
-import { ApolloError } from "apollo-server-errors";
 
 type ErrorCodeMapping = {
   [statusCode: number]: string;
