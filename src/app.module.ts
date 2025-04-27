@@ -2,7 +2,6 @@ import { Module } from "@nestjs/common";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
-import { UserModule } from "./user/user.module";
 import { MongooseModule } from "@nestjs/mongoose";
 import { configDotenv } from "dotenv";
 
@@ -18,7 +17,6 @@ const mongoUri = process.env.MONGODB_CONNECTION_STRING ?? "";
       sortSchema: true,
     }),
     MongooseModule.forRoot(mongoUri),
-    UserModule,
   ],
 })
 export class AppModule {}
