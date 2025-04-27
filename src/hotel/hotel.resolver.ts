@@ -3,6 +3,8 @@ import { HotelService } from "./hotel.service";
 import { Hotel } from "./entities/hotel.entity";
 import { CreateHotelInput } from "./dto/create-hotel.input";
 import { UpdateHotelInput } from "./dto/update-hotel.input";
+import { ParseObjectIdPipe } from "@nestjs/mongoose";
+import { Types } from "mongoose";
 
 @Resolver(() => Hotel)
 export class HotelResolver {
@@ -19,7 +21,9 @@ export class HotelResolver {
   }
 
   @Query(() => Hotel, { nullable: true, description: "Find a hotel by its ID" })
-  findOneHotel(@Args("id", { type: () => String }) id: string) {
+  findOneHotel(
+    @Args("id", { type: () => String }, ParseObjectIdPipe) id: Types.ObjectId
+  ) {
     return this.hotelService.findOne(id);
   }
 
@@ -27,14 +31,16 @@ export class HotelResolver {
     description: "Find a hotel by its ID, and update its data.",
   })
   updateOneHotel(
-    @Args("id", { type: () => String }) id: string,
+    @Args("id", { type: () => String }, ParseObjectIdPipe) id: Types.ObjectId,
     @Args("updateHotelInput") updateHotelInput: UpdateHotelInput
   ) {
     return this.hotelService.update(id, updateHotelInput);
   }
 
   @Mutation(() => Hotel, { description: "Delete a hotel with its data" })
-  removeOneHotel(@Args("id", { type: () => String }) id: string) {
+  removeOneHotel(
+    @Args("id", { type: () => String }, ParseObjectIdPipe) id: Types.ObjectId
+  ) {
     return this.hotelService.remove(id);
   }
 }

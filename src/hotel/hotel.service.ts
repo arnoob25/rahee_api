@@ -19,8 +19,8 @@ export class HotelService {
     return this.hotelModel.find();
   }
 
-  async findOne(id: string): Promise<Hotel | null> {
-    const hotel = await this.hotelModel.findById(new Types.ObjectId(id));
+  async findOne(id: Types.ObjectId): Promise<Hotel | null> {
+    const hotel = await this.hotelModel.findById(id);
 
     if (!hotel) {
       throw new NotFoundException("Hotel not found");
@@ -30,16 +30,13 @@ export class HotelService {
   }
 
   async update(
-    id: string,
+    id: Types.ObjectId,
     updateHotelInput: UpdateHotelInput
   ): Promise<Hotel | null> {
-    return this.hotelModel.findByIdAndUpdate(
-      new Types.ObjectId(id),
-      updateHotelInput
-    );
+    return this.hotelModel.findByIdAndUpdate(id, updateHotelInput);
   }
 
-  async remove(id: string): Promise<Hotel | null> {
-    return this.hotelModel.findByIdAndDelete(new Types.ObjectId(id));
+  async remove(id: Types.ObjectId): Promise<Hotel | null> {
+    return this.hotelModel.findByIdAndDelete(id);
   }
 }
