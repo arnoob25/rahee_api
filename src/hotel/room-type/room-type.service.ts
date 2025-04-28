@@ -1,6 +1,6 @@
 import { Injectable } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
-import { RoomType } from "../entities/room-type.entity";
+import { RoomType } from "../schema/room-type.schema";
 import { Model, Types } from "mongoose";
 
 @Injectable()

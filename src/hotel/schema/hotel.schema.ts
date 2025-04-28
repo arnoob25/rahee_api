@@ -39,7 +39,7 @@ export class Hotel {
   @Field(() => Float, {
     description: "Average user review score. 0-10",
   })
-  @Prop({ default: 0, min: 0, max: 10 })
+  @Prop({ required: false, default: 0, min: 0, max: 10 })
   review_score?: number;
 }
 

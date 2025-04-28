@@ -1,6 +1,6 @@
 import { Parent, ResolveField, Resolver } from "@nestjs/graphql"
-import { Room } from "../entities/room.entity";
-import { RoomType } from "../entities/room-type.entity";
+import { Room } from "../schema/room.schema";
+import { RoomType } from "../schema/room-type.schema";
 import { RoomService } from "../room/room.service";
 
 @Resolver(() => RoomType)

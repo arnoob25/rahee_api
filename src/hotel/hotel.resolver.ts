@@ -7,12 +7,12 @@ import {
   Parent,
 } from "@nestjs/graphql";
 import { HotelService } from "./hotel.service";
-import { Hotel } from "./entities/hotel.entity";
+import { Hotel } from "./schema/hotel.schema";
 import { CreateHotelInput } from "./dto/create-hotel.input";
 import { UpdateHotelInput } from "./dto/update-hotel.input";
 import { ParseObjectIdPipe } from "@nestjs/mongoose";
 import { Types } from "mongoose";
-import { RoomType } from "./entities/room-type.entity";
+import { RoomType } from "./schema/room-type.schema";
 import { RoomTypeService } from "./room-type/room-type.service";
 
 @Resolver(() => Hotel)
