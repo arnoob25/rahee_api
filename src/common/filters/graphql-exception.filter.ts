@@ -52,27 +52,6 @@ export class GraphqlExceptionFilter implements ExceptionFilter {
       };
 
       throw new ApolloError(message, code, extensions);
-    } else if (exception instanceof Error) {
-      // Handle non-HTTP errors but with proper error information
-      const message = exception.message || "An unexpected error occurred";
-
-      const extensions = {
-        statusCode: 500,
-        code: "INTERNAL_SERVER_ERROR",
-        timestamp: new Date().toISOString(),
-      };
-
-      throw new ApolloError(message, "INTERNAL_SERVER_ERROR", extensions);
-    } else {
-      // Handle completely unknown errors
-      throw new ApolloError(
-        "An unexpected error occurred",
-        "INTERNAL_SERVER_ERROR",
-        {
-          statusCode: 500,
-          timestamp: new Date().toISOString(),
-        }
-      );
     }
   }
 }
