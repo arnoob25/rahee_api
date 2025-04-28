@@ -19,6 +19,13 @@ export class Hotel {
   @Field({ nullable: false, description: "Description of the hotel" })
   description: string;
 
+  @Prop({ required: true, type: Array<Types.ObjectId>, ref: "RoomType" })
+  @Field(() => [ID], {
+    nullable: false,
+    description: "Available types of rooms in a hotel.",
+  })
+  room_type_ids: Types.ObjectId[];
+
   @Prop({ required: true, maxlength: 800 })
   @Field({ nullable: false, description: "Address of the hotel" })
   address: string;
@@ -27,13 +34,13 @@ export class Hotel {
     description: "Rating of the hotel. 0-5 stars",
   })
   @Prop({ default: 0, min: 0, max: 5 })
-  star_rating: number;
+  star_rating?: number;
 
   @Field(() => Float, {
     description: "Average user review score. 0-10",
   })
   @Prop({ default: 0, min: 0, max: 10 })
-  review_score: number;
+  review_score?: number;
 }
 
 export type HotelDocument = HydratedDocument<Hotel>;

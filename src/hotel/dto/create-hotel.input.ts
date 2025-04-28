@@ -1,4 +1,5 @@
-import { InputType, Field, Float } from "@nestjs/graphql";
+import { InputType, Field, Float, ID } from "@nestjs/graphql";
+import { Types } from "mongoose";
 
 @InputType()
 export class CreateHotelInput {
@@ -15,6 +16,12 @@ export class CreateHotelInput {
   })
   description: string;
 
+  @Field(() => [ID], {
+    nullable: false,
+    description: "Available types of rooms in a hotel.",
+  })
+  room_types: [Types.ObjectId];
+
   @Field({
     nullable: false,
     description:
@@ -25,10 +32,10 @@ export class CreateHotelInput {
   @Field(() => Float, {
     description: "Rating of the hotel. 0-5 stars. Example: 4.5",
   })
-  star_rating: number;
+  star_rating?: number;
 
   @Field(() => Float, {
     description: "Average user review score. 0-10. Example: 8.7",
   })
-  review_score: number;
+  review_score?: number;
 }
