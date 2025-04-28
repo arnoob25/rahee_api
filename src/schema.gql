@@ -23,13 +23,13 @@ input CreateHotelInput {
   name: String!
 
   """Average user review score. 0-10. Example: 8.7"""
-  review_score: Float!
+  review_score: Float
 
   """Available types of rooms in a hotel."""
-  room_types: [ID!]!
+  room_type_ids: [ID!]!
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
-  star_rating: Float!
+  star_rating: Float
 }
 
 """Data for a hotel"""
@@ -142,7 +142,7 @@ input UpdateHotelInput {
   review_score: Float
 
   """Available types of rooms in a hotel."""
-  room_types: [ID!]
+  room_type_ids: [ID!]
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
   star_rating: Float
