@@ -2,6 +2,14 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""
+Describes the type of bed for a room type. Example: Single bed, double bed, etc.
+"""
+enum BedType {
+  double
+  single
+}
+
 input CreateHotelInput {
   """Address of the hotel. Example: '123 Ocean Ave, Beach City, USA'"""
   address: String!
@@ -16,6 +24,9 @@ input CreateHotelInput {
 
   """Average user review score. 0-10. Example: 8.7"""
   review_score: Float!
+
+  """Available types of rooms in a hotel."""
+  room_types: [ID!]!
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
   star_rating: Float!
@@ -37,6 +48,12 @@ type Hotel {
 
   """Average user review score. 0-10"""
   review_score: Float!
+
+  """Finds the types of rooms available in a hotel."""
+  roomTypes: [RoomType!]!
+
+  """Available types of rooms in a hotel."""
+  room_type_ids: [ID!]!
 
   """Rating of the hotel. 0-5 stars"""
   star_rating: Float!
@@ -61,6 +78,54 @@ type Query {
   findOneHotel(id: String!): Hotel
 }
 
+"""
+Represents a hotel room with its type, number, floor, and availability status.
+"""
+type Room {
+  """Unique identifier for the room."""
+  _id: ID!
+
+  """Whether the room is currently available for booking."""
+  availability: Boolean!
+
+  """The floor on which the room is located."""
+  floor_number: Int!
+
+  """Specific number assigned to the room."""
+  room_number: Int!
+
+  """Reference ID to the type of room (e.g., Deluxe, Suite)."""
+  room_type_id: ID!
+}
+
+"""
+Represents a type of room in a hotel, including details about pricing, bed type, and maximum capacity. Example: Deluxe, Standard, etc.
+"""
+type RoomType {
+  """Unique identifier for the room type."""
+  _id: ID!
+
+  """Type of the bed in this room (e.g., King, Single)."""
+  bed_type: BedType!
+
+  """
+  The number of complementary children that can stay in this room type, if any.
+  """
+  complementary_child: Int!
+
+  """The maximum number of adults that can occupy this room type."""
+  max_adults: Int!
+
+  """The name or designation of the room type (e.g., Deluxe, Standard)."""
+  name: String!
+
+  """The price per night for this room type."""
+  price_per_night: Float!
+
+  """Finds the individual rooms of this room type."""
+  rooms: [Room!]!
+}
+
 input UpdateHotelInput {
   """Address of the hotel. Example: '123 Ocean Ave, Beach City, USA'"""
   address: String
@@ -75,6 +140,9 @@ input UpdateHotelInput {
 
   """Average user review score. 0-10. Example: 8.7"""
   review_score: Float
+
+  """Available types of rooms in a hotel."""
+  room_types: [ID!]
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
   star_rating: Float
