@@ -16,7 +16,8 @@ const mongoUri = process.env.MONGODB_CONNECTION_STRING ?? "";
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), "src/schema.gql"),
-      graphiql: true, //!isProduction,
+      graphiql: !isProduction,
+      introspection: !isProduction,
       sortSchema: true,
       formatError: isProduction
         ? (error) => {
@@ -28,7 +29,7 @@ const mongoUri = process.env.MONGODB_CONNECTION_STRING ?? "";
               },
             };
           }
-        : undefined, // No formatting in production
+        : undefined,
     }),
     MongooseModule.forRoot(mongoUri),
     HotelModule,
