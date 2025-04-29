@@ -41,6 +41,12 @@ export class Hotel {
   })
   @Prop({ default: 0, min: 0, max: 10 })
   review_score?: number;
+
+  @Field(() => [ID], {
+    description: "Media references (images/ videos) for a hotel.",
+  })
+  @Prop({ required: true, type: Array<Types.ObjectId>, ref: "Media" })
+  media_ids: Types.ObjectId[];
 }
 
 export type HotelDocument = HydratedDocument<Hotel>;

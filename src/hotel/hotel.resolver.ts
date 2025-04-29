@@ -14,12 +14,15 @@ import { ParseObjectIdPipe } from "@nestjs/mongoose";
 import { Types } from "mongoose";
 import { RoomType } from "./schemas/room-type.schema";
 import { RoomTypeService } from "./room-type/room-type.service";
+import { Media } from "src/common/schemas/media.schema";
+import { CommonService } from "src/common/common.service";
 
 @Resolver(() => Hotel)
 export class HotelResolver {
   constructor(
     private readonly hotelService: HotelService,
-    private readonly roomTypeService: RoomTypeService
+    private readonly roomTypeService: RoomTypeService,
+    private readonly commonService: CommonService
   ) {}
 
   @Mutation(() => Hotel, { description: "Create a new hotel" })
@@ -46,6 +49,13 @@ export class HotelResolver {
   })
   async getRoomTypes(@Parent() hotel: Hotel) {
     return this.roomTypeService.findByIds(hotel.room_type_ids);
+  }
+
+  @ResolveField("media", () => [Media], {
+    description: "Finds the related images and videos for a hotel.",
+  })
+  async getMedia(@Parent() hotel: Hotel) {
+    return this.commonService.findMediaByIds(hotel.media_ids);
   }
 
   @Mutation(() => Hotel, {

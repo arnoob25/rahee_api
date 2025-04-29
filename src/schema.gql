@@ -7,7 +7,10 @@ Describes the type of bed for a room type. Example: Single bed, double bed, etc.
 """
 enum BedType {
   double
+  king
+  queen
   single
+  sofa
 }
 
 input CreateHotelInput {
@@ -43,11 +46,17 @@ type Hotel {
   """Description of the hotel"""
   description: String!
 
+  """Finds the related images and videos for a hotel."""
+  media: [Media!]!
+
+  """Media references (images/ videos) for a hotel."""
+  media_ids: [ID!]!
+
   """Name of the hotel"""
   name: String!
 
   """Average user review score. 0-10"""
-  review_score: Float!
+  review_score: Float
 
   """Finds the types of rooms available in a hotel."""
   roomTypes: [RoomType!]!
@@ -56,7 +65,31 @@ type Hotel {
   room_type_ids: [ID!]!
 
   """Rating of the hotel. 0-5 stars"""
-  star_rating: Float!
+  star_rating: Float
+}
+
+"""A media asset, such as an image or video, associated with content."""
+type Media {
+  """Unique identifier for the media item."""
+  _id: ID!
+
+  """Marks this media as the cover image."""
+  is_cover: Boolean
+
+  """Marks this media as featured content."""
+  is_featured: Boolean
+
+  """The type of media, either image or video."""
+  type: MediaType!
+
+  """The URL where the media file is hosted."""
+  url: String!
+}
+
+"""Specifies whether the media is an image or a video."""
+enum MediaType {
+  image
+  video
 }
 
 type Mutation {
@@ -72,7 +105,7 @@ type Mutation {
 
 type Query {
   """Get all the hotels in the database."""
-  findAllHotels: [Hotel!]!
+  findHotels: [Hotel!]!
 
   """Find a hotel by its ID"""
   findOneHotel(id: String!): Hotel
@@ -99,6 +132,16 @@ type Room {
 }
 
 """
+Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.
+"""
+enum RoomCategory {
+  deluxe
+  economy
+  standard
+  suite
+}
+
+"""
 Represents a type of room in a hotel, including details about pricing, bed type, and maximum capacity. Example: Deluxe, Standard, etc.
 """
 type RoomType {
@@ -111,16 +154,30 @@ type RoomType {
   """
   The number of complementary children that can stay in this room type, if any.
   """
-  complementary_child: Int!
+  complementary_child: Int
 
   """The maximum number of adults that can occupy this room type."""
   max_adults: Int!
+
+  """Finds all associated media (videos, images) for each room type"""
+  media: [Media!]!
+
+  """Media references (images/ videos) for a type of room."""
+  media_ids: [ID!]!
 
   """The name or designation of the room type (e.g., Deluxe, Standard)."""
   name: String!
 
   """The price per night for this room type."""
   price_per_night: Float!
+
+  """Finds and counts the individual rooms for this room type."""
+  roomCount: Float!
+
+  """
+  Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.
+  """
+  room_category: RoomCategory!
 
   """Finds the individual rooms of this room type."""
   rooms: [Room!]!

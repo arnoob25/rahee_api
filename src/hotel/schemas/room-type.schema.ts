@@ -85,8 +85,10 @@ export class RoomType {
   @Prop({ default: 0, min: 0, max: 20 })
   complementary_child?: number;
 
-  @Field(() => [ID], { nullable: true, description: "" })
-  @Prop({ type: Array<Types.ObjectId>, ref: "Media" })
+  @Field(() => [ID], {
+    description: "Media references (images/ videos) for a type of room.",
+  })
+  @Prop({ required: true, type: Array<Types.ObjectId>, ref: "Media" })
   media_ids: Types.ObjectId[];
 }
 
