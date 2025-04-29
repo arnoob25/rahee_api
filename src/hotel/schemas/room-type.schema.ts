@@ -9,10 +9,26 @@ import {
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 
+export enum RoomCategory {
+  economy = "economy",
+  standard = "standard",
+  deluxe = "deluxe",
+  suite = "suite",
+}
+
 export enum BedType {
   single = "single",
   double = "double",
+  queen = "queen",
+  king = "king",
+  sofa = "sofa",
 }
+
+registerEnumType(RoomCategory, {
+  name: "RoomCategory",
+  description:
+    "Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.",
+});
 
 registerEnumType(BedType, {
   name: "BedType",
@@ -36,15 +52,20 @@ export class RoomType {
   @Prop({ required: true, maxlength: 255 })
   name: string;
 
+  @Field(() => RoomCategory, {
+    description:
+      "Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.",
+  })
+  @Prop({ required: true, type: String, enum: Object.values(RoomCategory) })
+  room_category: RoomCategory;
+
   @Field(() => BedType, {
-    nullable: false,
     description: "Type of the bed in this room (e.g., King, Single).",
   })
   @Prop({ required: true, type: String, enum: Object.values(BedType) })
-  bed_type?: BedType;
+  bed_type: BedType;
 
   @Field(() => Float, {
-    nullable: false,
     description: "The price per night for this room type.",
   })
   @Prop({ required: true, min: 0, max: 9999999 })
@@ -57,11 +78,16 @@ export class RoomType {
   max_adults: number;
 
   @Field(() => Int, {
+    nullable: true,
     description:
       "The number of complementary children that can stay in this room type, if any.",
   })
   @Prop({ default: 0, min: 0, max: 20 })
   complementary_child?: number;
+
+  @Field(() => [ID], { nullable: true, description: "" })
+  @Prop({ type: Array<Types.ObjectId>, ref: "Media" })
+  media_ids: Types.ObjectId[];
 }
 
 export type RoomTypeDocument = HydratedDocument<RoomType>;

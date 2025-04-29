@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateHotelInput } from "./dto/create-hotel.input";
 import { UpdateHotelInput } from "./dto/update-hotel.input";
 import { InjectModel } from "@nestjs/mongoose";
-import { Hotel } from "./schema/hotel.schema";
+import { Hotel } from "./schemas/hotel.schema";
 import { Model, Types } from "mongoose";
 
 @Injectable()

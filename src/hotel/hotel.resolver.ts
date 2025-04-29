@@ -7,12 +7,12 @@ import {
   Parent,
 } from "@nestjs/graphql";
 import { HotelService } from "./hotel.service";
-import { Hotel } from "./schema/hotel.schema";
+import { Hotel } from "./schemas/hotel.schema";
 import { CreateHotelInput } from "./dto/create-hotel.input";
 import { UpdateHotelInput } from "./dto/update-hotel.input";
 import { ParseObjectIdPipe } from "@nestjs/mongoose";
 import { Types } from "mongoose";
-import { RoomType } from "./schema/room-type.schema";
+import { RoomType } from "./schemas/room-type.schema";
 import { RoomTypeService } from "./room-type/room-type.service";
 
 @Resolver(() => Hotel)
@@ -30,7 +30,7 @@ export class HotelResolver {
   }
 
   @Query(() => [Hotel], { description: "Get all the hotels in the database." })
-  async findAllHotels() {
+  async findHotels() {
     return this.hotelService.findAll();
   }
 

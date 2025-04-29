@@ -13,28 +13,24 @@ export class Room {
 
   @Prop({ required: true, type: Types.ObjectId, ref: "RoomType" })
   @Field(() => ID, {
-    nullable: false,
     description: "Reference ID to the type of room (e.g., Deluxe, Suite).",
   })
   room_type_id: Types.ObjectId;
 
   @Prop({ required: true, min: 0, max: 999999 })
   @Field(() => Int, {
-    nullable: false,
     description: "Specific number assigned to the room.",
   })
   room_number: number;
 
   @Prop({ required: true, min: 0, max: 999 })
   @Field(() => Int, {
-    nullable: false,
     description: "The floor on which the room is located.",
   })
   floor_number: number;
 
-  @Prop({ required: true, default: false })
+  @Prop({ required: true })
   @Field({
-    nullable: false,
     description: "Whether the room is currently available for booking.",
   })
   availability: boolean;
