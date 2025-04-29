@@ -5,6 +5,7 @@ import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
 import { configDotenv } from "dotenv";
 import { HotelModule } from "./hotel/hotel.module";
+import { CommonModule } from "./common/common.module";
 
 configDotenv();
 const isProduction = process.env.NODE_ENV === "production";
@@ -33,6 +34,7 @@ const mongoUri = process.env.MONGODB_CONNECTION_STRING ?? "";
     }),
     MongooseModule.forRoot(mongoUri),
     HotelModule,
+    CommonModule,
   ],
 })
 export class AppModule {}
