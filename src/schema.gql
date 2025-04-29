@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""Perks that come with the room. Example: Free wifi, Room service, etc."""
+enum Amenity {
+  pool
+  tv
+  wifi
+}
+
 """
 Describes the type of bed for a room type. Example: Single bed, double bed, etc.
 """
@@ -35,6 +42,14 @@ input CreateHotelInput {
   star_rating: Float
 }
 
+"""
+Facilities offered by the hotel. Example: 24hr Check in, Pool Access, etc.
+"""
+enum Facility {
+  gym
+  pool
+}
+
 """Data for a hotel"""
 type Hotel {
   """Unique identifier for a hotel"""
@@ -45,6 +60,11 @@ type Hotel {
 
   """Description of the hotel"""
   description: String!
+
+  """
+  Facilities offered by the hotel. Example: 24hr Check in, Pool Access, etc.
+  """
+  facilities: [Facility!]
 
   """Finds the related images and videos for a hotel."""
   media: [Media!]!
@@ -66,6 +86,11 @@ type Hotel {
 
   """Rating of the hotel. 0-5 stars"""
   star_rating: Float
+
+  """
+  Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
+  """
+  tags: [Tag!]
 }
 
 """A media asset, such as an image or video, associated with content."""
@@ -148,6 +173,9 @@ type RoomType {
   """Unique identifier for the room type."""
   _id: ID!
 
+  """Perks that come with the room. Example: Free wifi, Room service, etc."""
+  amenities: [Amenity!]
+
   """Type of the bed in this room (e.g., King, Single)."""
   bed_type: BedType!
 
@@ -181,6 +209,16 @@ type RoomType {
 
   """Finds the individual rooms of this room type."""
   rooms: [Room!]!
+}
+
+"""
+Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
+"""
+enum Tag {
+  beachfront
+  budget
+  family
+  luxury
 }
 
 input UpdateHotelInput {
