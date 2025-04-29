@@ -1,16 +1,7 @@
-import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, ID, ObjectType } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
-
-export enum MediaType {
-  image = "image",
-  video = "video",
-}
-
-registerEnumType(MediaType, {
-  name: "MediaType",
-  description: "Specifies whether the media is an image or a video.",
-});
+import { MediaType } from "src/hotel/enums";
 
 @ObjectType({
   description:

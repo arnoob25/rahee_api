@@ -1,46 +1,13 @@
-import {
-  Field,
-  ID,
-  ObjectType,
-  Int,
-  Float,
-  registerEnumType,
-} from "@nestjs/graphql";
+import { Field, ID, ObjectType, Int, Float } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
-
-export enum RoomCategory {
-  economy = "economy",
-  standard = "standard",
-  deluxe = "deluxe",
-  suite = "suite",
-}
-
-export enum BedType {
-  single = "single",
-  double = "double",
-  queen = "queen",
-  king = "king",
-  sofa = "sofa",
-}
-
-registerEnumType(RoomCategory, {
-  name: "RoomCategory",
-  description:
-    "Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.",
-});
-
-registerEnumType(BedType, {
-  name: "BedType",
-  description:
-    "Describes the type of bed for a room type. Example: Single bed, double bed, etc.",
-});
+import { Amenity, BedType, RoomCategory } from "../enums";
 
 @ObjectType({
   description:
     "Represents a type of room in a hotel, including details about pricing, bed type, and maximum capacity. Example: Deluxe, Standard, etc.",
 })
-@Schema()
+@Schema({ timestamps: true })
 export class RoomType {
   @Field(() => ID, { description: "Unique identifier for the room type." })
   _id: Types.ObjectId;
@@ -88,8 +55,16 @@ export class RoomType {
   @Field(() => [ID], {
     description: "Media references (images/ videos) for a type of room.",
   })
-  @Prop({ required: true, type: Array<Types.ObjectId>, ref: "Media" })
+  @Prop({ required: true, type: [{ type: Types.ObjectId, ref: "Media" }] })
   media_ids: Types.ObjectId[];
+
+  @Field(() => [Amenity], {
+    nullable: true,
+    description:
+      "Perks that come with the room. Example: Free wifi, Room service, etc.",
+  })
+  @Prop({ type: [String], enum: Object.values(Amenity) })
+  amenities: Amenity[];
 }
 
 export type RoomTypeDocument = HydratedDocument<RoomType>;
