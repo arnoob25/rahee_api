@@ -8,8 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configureService = app.get(ConfigService);
   const port = configureService.get<number>("PORT") ?? 3000;
-  const isProduction =
-    configureService.get<string>("NODE_ENV") === "production";
+  const origins = configureService.get<string[]>("CORS_ORIGIN");
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,14 +20,10 @@ async function bootstrap() {
 
   app.useGlobalFilters(new GraphqlExceptionFilter());
 
-  if (isProduction) {
-    const origins = configureService.get<string[]>("CORS_ORIGIN");
-
-    app.enableCors({
-      origin: origins,
-      credentials: true,
-    });
-  }
+  app.enableCors({
+    origin: origins,
+    credentials: true,
+  });
 
   await app.listen(port);
 }
