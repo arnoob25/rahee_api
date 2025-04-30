@@ -3,36 +3,47 @@ import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
 import { MongooseModule } from "@nestjs/mongoose";
-import { configDotenv } from "dotenv";
 import { HotelModule } from "./hotel/hotel.module";
 import { CommonModule } from "./common/common.module";
-
-configDotenv();
-const isProduction = process.env.NODE_ENV === "production";
-
-const mongoUri = process.env.MONGODB_CONNECTION_STRING ?? "";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { envSchema } from "./common/config.validation";
 
 @Module({
   imports: [
-    GraphQLModule.forRoot<ApolloDriverConfig>({
+    ConfigModule.forRoot({ isGlobal: true, validationSchema: envSchema }),
+
+    GraphQLModule.forRootAsync<ApolloDriverConfig>({
       driver: ApolloDriver,
-      autoSchemaFile: join(process.cwd(), "src/schema.gql"),
-      graphiql: !isProduction,
-      introspection: !isProduction,
-      sortSchema: true,
-      formatError: isProduction
-        ? (error) => {
-            return {
-              message: error.message,
-              extensions: {
-                code: error.extensions?.code,
-                statusCode: error.extensions?.statusCode,
-              },
-            };
-          }
-        : undefined,
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const isProduction =
+          configService.get<string>("NODE_ENV") === "production";
+
+        return {
+          autoSchemaFile: join(process.cwd(), "src/schema.gql"),
+          graphiql: !isProduction,
+          introspection: !isProduction,
+          sortSchema: true,
+          formatError: isProduction
+            ? (error) => ({
+                message: error.message,
+                extensions: {
+                  code: error.extensions?.code,
+                  statusCode: error.extensions?.statusCode,
+                },
+              })
+            : undefined,
+        };
+      },
     }),
-    MongooseModule.forRoot(mongoUri),
+
+    MongooseModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>("MONGODB_CONNECTION_STRING") ?? "",
+      }),
+    }),
+
     HotelModule,
     CommonModule,
   ],
