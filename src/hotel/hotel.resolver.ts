@@ -16,6 +16,7 @@ import { RoomType } from "./schemas/room-type.schema";
 import { RoomTypeService } from "./room-type/room-type.service";
 import { Media } from "src/common/schemas/media.schema";
 import { CommonService } from "src/common/common.service";
+import { Review } from "src/common/schemas/review.schema";
 
 @Resolver(() => Hotel)
 export class HotelResolver {
@@ -48,14 +49,39 @@ export class HotelResolver {
     description: "Finds the types of rooms available in a hotel.",
   })
   async getRoomTypes(@Parent() hotel: Hotel) {
-    return this.roomTypeService.findByIds(hotel.room_type_ids);
+    return this.roomTypeService.findByIds(hotel.roomTypeIds);
   }
 
   @ResolveField("media", () => [Media], {
     description: "Finds the related images and videos for a hotel.",
   })
   async getMedia(@Parent() hotel: Hotel) {
-    return this.commonService.findMediaByIds(hotel.media_ids);
+    return this.commonService.findMediaByIds(hotel.mediaIds);
+  }
+
+  // TODO: need to implement pagination
+  @ResolveField("reviews", () => [Review], {
+    description: "Finds all the user reviews for a hotel",
+  })
+  async getReviews(@Parent() hotel: Hotel) {
+    return this.commonService.findReviewsByHotelId(hotel._id);
+  }
+
+  @ResolveField("reviewScore", () => Number, {
+    description: "Average user review score. 0-10",
+  })
+  async getReviewScore(@Parent() hotel: Hotel) {
+    const reviews = await this.commonService.findReviewsByHotelId(hotel._id);
+    const totalScore = reviews.reduce((sum, review) => sum + review.rating, 0);
+    const averageScore = totalScore / reviews.length;
+    return averageScore;
+  }
+
+  @ResolveField("reviewCount", () => Number, {
+    description: "Number of reviews received by the hotel.",
+  })
+  async getReviewCount(@Parent() hotel: Hotel) {
+    return (await this.commonService.findReviewsByHotelId(hotel._id)).length;
   }
 
   @Mutation(() => Hotel, {
