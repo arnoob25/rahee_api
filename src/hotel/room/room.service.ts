@@ -10,6 +10,6 @@ export class RoomService {
   ) {}
 
   async findByRoomType(roomTypeId: Types.ObjectId): Promise<Room[]> {
-    return this.roomModel.find({ room_type_id: { $eq: roomTypeId } });
+    return this.roomModel.find({ roomTypeId: { $eq: roomTypeId } });
   }
 }

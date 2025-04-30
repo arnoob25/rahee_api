@@ -15,19 +15,19 @@ export class Room {
   @Field(() => ID, {
     description: "Reference ID to the type of room (e.g., Deluxe, Suite).",
   })
-  room_type_id: Types.ObjectId;
+  roomTypeId: Types.ObjectId;
 
   @Prop({ required: true, min: 0, max: 999999 })
   @Field(() => Int, {
     description: "Specific number assigned to the room.",
   })
-  room_number: number;
+  roomNumber: number;
 
   @Prop({ required: true, min: 0, max: 999 })
   @Field(() => Int, {
     description: "The floor on which the room is located.",
   })
-  floor_number: number;
+  floorNumber: number;
 
   @Prop({ required: true })
   @Field({

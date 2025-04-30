@@ -33,6 +33,6 @@ export class RoomTypeResolver {
       "Finds all associated media (videos, images) for each room type",
   })
   async getMedia(@Parent() roomType: RoomType) {
-    return this.commonService.findMediaByIds(roomType.media_ids);
+    return this.commonService.findMediaByIds(roomType.mediaIds);
   }
 }

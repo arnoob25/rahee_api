@@ -4,6 +4,7 @@
 
 """Perks that come with the room. Example: Free wifi, Room service, etc."""
 enum Amenity {
+  breakfast
   pool
   tv
   wifi
@@ -33,19 +34,26 @@ input CreateHotelInput {
   name: String!
 
   """Average user review score. 0-10. Example: 8.7"""
-  review_score: Float
+  reviewScore: Float
 
   """Available types of rooms in a hotel."""
-  room_type_ids: [ID!]!
+  roomTypeIds: [ID!]!
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
-  star_rating: Float
+  starRating: Float
 }
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 """
 Facilities offered by the hotel. Example: 24hr Check in, Pool Access, etc.
 """
 enum Facility {
+  cinema
+  conference
   gym
   pool
 }
@@ -70,22 +78,33 @@ type Hotel {
   media: [Media!]!
 
   """Media references (images/ videos) for a hotel."""
-  media_ids: [ID!]!
+  mediaIds: [ID!]!
 
   """Name of the hotel"""
   name: String!
 
+  """
+  Specifies the rule the hotel conforms to. Example: No check out after 12 pm.
+  """
+  policies: [PolicyRule!]
+
+  """Number of reviews received by the hotel."""
+  reviewCount: Float!
+
   """Average user review score. 0-10"""
-  review_score: Float
+  reviewScore: Float!
+
+  """Finds all the user reviews for a hotel"""
+  reviews: [Review!]!
+
+  """Available types of rooms in a hotel."""
+  roomTypeIds: [ID!]!
 
   """Finds the types of rooms available in a hotel."""
   roomTypes: [RoomType!]!
 
-  """Available types of rooms in a hotel."""
-  room_type_ids: [ID!]!
-
   """Rating of the hotel. 0-5 stars"""
-  star_rating: Float
+  starRating: Float
 
   """
   Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
@@ -99,10 +118,10 @@ type Media {
   _id: ID!
 
   """Marks this media as the cover image."""
-  is_cover: Boolean
+  isCover: Boolean
 
   """Marks this media as featured content."""
-  is_featured: Boolean
+  isFeatured: Boolean
 
   """The type of media, either image or video."""
   type: MediaType!
@@ -128,12 +147,82 @@ type Mutation {
   updateOneHotel(id: String!, updateHotelInput: UpdateHotelInput!): Hotel!
 }
 
+"""
+Specifies the rule the hotel conforms to. Example: No check out after 12 pm.
+"""
+enum PolicyRule {
+  ADACompliantRooms
+  AgeRestrictions
+  AllowedPets
+  BookingDeposit
+  Cash
+  CreditCards
+  DesignatedSmokingAreas
+  DigitalWallets
+  EarlyCheckIn
+  ElectricVehicleCharging
+  ExcessiveNoise
+  ExpressCheckOut
+  FreeCancellation
+  HoursOfOperation
+  IncidentalHold
+  LateCancellation
+  LateCheckIn
+  LateCheckOut
+  LuggageStorage
+  MinimumCheckInAge
+  Minors
+  MobilityEquipment
+  NoShowPolicy
+  NonSmokingRooms
+  Parking
+  PetAmenities
+  PetFee
+  PorterService
+  PremiumWiFi
+  ProperAttire
+  QuietHours
+  RequiredDocuments
+  ResortFee
+  SelfParking
+  ServiceAnimals
+  StandardCheckIn
+  StandardCheckOut
+  ValetParking
+  ViolationFee
+  WiFiAvailability
+}
+
 type Query {
   """Get all the hotels in the database."""
   findHotels: [Hotel!]!
 
   """Find a hotel by its ID"""
   findOneHotel(id: String!): Hotel
+}
+
+"""Review left by a user. Example: User review for a hotel."""
+type Review {
+  """Unique identifier for the review"""
+  _id: ID!
+
+  """Finds and returns the user (author) of the review."""
+  author: User!
+
+  """User id of the reviewer"""
+  authorId: ID!
+
+  """Full content of the review"""
+  content: String!
+
+  """Time when the review was created"""
+  createdAt: DateTime!
+
+  """Identifier for the hotel the user reviewed"""
+  hotelId: ID!
+
+  """Rating given by the reviewer, like 10/10"""
+  rating: Int!
 }
 
 """
@@ -147,13 +236,13 @@ type Room {
   availability: Boolean!
 
   """The floor on which the room is located."""
-  floor_number: Int!
+  floorNumber: Int!
 
   """Specific number assigned to the room."""
-  room_number: Int!
+  roomNumber: Int!
 
   """Reference ID to the type of room (e.g., Deluxe, Suite)."""
-  room_type_id: ID!
+  roomTypeId: ID!
 }
 
 """
@@ -177,35 +266,35 @@ type RoomType {
   amenities: [Amenity!]
 
   """Type of the bed in this room (e.g., King, Single)."""
-  bed_type: BedType!
+  bedType: BedType!
 
   """
   The number of complementary children that can stay in this room type, if any.
   """
-  complementary_child: Int
+  complementaryChild: Int
 
   """The maximum number of adults that can occupy this room type."""
-  max_adults: Int!
+  maxAdults: Int!
 
   """Finds all associated media (videos, images) for each room type"""
   media: [Media!]!
 
   """Media references (images/ videos) for a type of room."""
-  media_ids: [ID!]!
+  mediaIds: [ID!]!
 
   """The name or designation of the room type (e.g., Deluxe, Standard)."""
   name: String!
 
   """The price per night for this room type."""
-  price_per_night: Float!
-
-  """Finds and counts the individual rooms for this room type."""
-  roomCount: Float!
+  pricePerNight: Float!
 
   """
   Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.
   """
-  room_category: RoomCategory!
+  roomCategory: RoomCategory!
+
+  """Finds and counts the individual rooms for this room type."""
+  roomCount: Float!
 
   """Finds the individual rooms of this room type."""
   rooms: [Room!]!
@@ -215,7 +304,7 @@ type RoomType {
 Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
 """
 enum Tag {
-  beachfront
+  beach
   budget
   family
   luxury
@@ -234,11 +323,20 @@ input UpdateHotelInput {
   name: String
 
   """Average user review score. 0-10. Example: 8.7"""
-  review_score: Float
+  reviewScore: Float
 
   """Available types of rooms in a hotel."""
-  room_type_ids: [ID!]
+  roomTypeIds: [ID!]
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
-  star_rating: Float
+  starRating: Float
+}
+
+"""Registered user of our service."""
+type User {
+  """Unique identifier for the user"""
+  _id: ID!
+
+  """Username of the user"""
+  username: String!
 }

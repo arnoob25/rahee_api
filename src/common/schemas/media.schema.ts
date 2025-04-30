@@ -28,7 +28,7 @@ export class Media {
     defaultValue: false,
     description: "Marks this media as the cover image.",
   })
-  is_cover?: boolean;
+  isCover?: boolean;
 
   @Prop({ default: false })
   @Field({
@@ -36,7 +36,7 @@ export class Media {
     defaultValue: false,
     description: "Marks this media as featured content.",
   })
-  is_featured?: boolean;
+  isFeatured?: boolean;
 }
 
 export type MediaDocument = HydratedDocument<Media>;

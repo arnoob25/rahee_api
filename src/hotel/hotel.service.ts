@@ -19,11 +19,11 @@ export class HotelService {
     return this.hotelModel.find();
   }
 
-  async findOne(id: Types.ObjectId): Promise<Hotel | null> {
+  async findOne(id: Types.ObjectId): Promise<Hotel> {
     const hotel = await this.hotelModel.findById(id);
 
     if (!hotel) {
-      throw new NotFoundException("Hotel not found");
+      throw new NotFoundException(`Hotel with the id ${String(id)} not found`);
     }
 
     return hotel;
@@ -36,7 +36,13 @@ export class HotelService {
     return this.hotelModel.findByIdAndUpdate(id, updateHotelInput);
   }
 
-  async remove(id: Types.ObjectId): Promise<Hotel | null> {
-    return this.hotelModel.findByIdAndDelete(id);
+  async remove(id: Types.ObjectId): Promise<Hotel> {
+    const deletedHotel = await this.hotelModel.findByIdAndDelete(id);
+
+    if (!deletedHotel) {
+      throw new NotFoundException(`Hotel with the id ${String(id)} not found.`);
+    }
+
+    return deletedHotel;
   }
 }

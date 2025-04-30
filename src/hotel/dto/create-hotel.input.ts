@@ -40,7 +40,7 @@ export class CreateHotelInput {
   })
   @IsArray()
   @IsMongoId({ each: true })
-  room_type_ids: [Types.ObjectId];
+  roomTypeIds: [Types.ObjectId];
 
   @Field({
     nullable: false,
@@ -61,7 +61,7 @@ export class CreateHotelInput {
   @IsNumber()
   @Min(0)
   @Max(5)
-  star_rating?: number;
+  starRating?: number;
 
   @Field(() => Float, {
     nullable: true,
@@ -71,5 +71,5 @@ export class CreateHotelInput {
   @IsNumber()
   @Min(0)
   @Max(10)
-  review_score?: number;
+  reviewScore?: number;
 }

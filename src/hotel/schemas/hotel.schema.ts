@@ -1,7 +1,7 @@
 import { ObjectType, Field, ID, Float } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
-import { Facility, Tag } from "../enums";
+import { Facility, PolicyRule, Tag } from "../enums";
 
 @ObjectType({ description: "Data for a hotel" })
 @Schema({ timestamps: true })
@@ -23,7 +23,7 @@ export class Hotel {
   @Field(() => [ID], {
     description: "Available types of rooms in a hotel.",
   })
-  room_type_ids: Types.ObjectId[];
+  roomTypeIds: Types.ObjectId[];
 
   @Prop({ required: true, maxlength: 800 })
   @Field({ description: "Address of the hotel" })
@@ -34,20 +34,13 @@ export class Hotel {
     description: "Rating of the hotel. 0-5 stars",
   })
   @Prop({ default: 0, min: 0, max: 5 })
-  star_rating?: number;
-
-  @Field(() => Float, {
-    nullable: true,
-    description: "Average user review score. 0-10",
-  })
-  @Prop({ default: 0, min: 0, max: 10 })
-  review_score?: number;
+  starRating?: number;
 
   @Field(() => [ID], {
     description: "Media references (images/ videos) for a hotel.",
   })
   @Prop({ required: true, type: [{ type: Types.ObjectId, ref: "Media" }] })
-  media_ids: Types.ObjectId[];
+  mediaIds: Types.ObjectId[];
 
   @Field(() => [Tag], {
     nullable: true,
@@ -64,6 +57,14 @@ export class Hotel {
   })
   @Prop({ type: [String], enum: Object.values(Facility) })
   facilities?: Facility[];
+
+  @Field(() => [PolicyRule], {
+    nullable: true,
+    description:
+      "Specifies the rule the hotel conforms to. Example: No check out after 12 pm.",
+  })
+  @Prop({ type: [String], enum: Object.values(PolicyRule) })
+  policies?: PolicyRule[];
 }
 
 export type HotelDocument = HydratedDocument<Hotel>;
