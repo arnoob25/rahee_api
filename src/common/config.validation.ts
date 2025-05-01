@@ -18,7 +18,7 @@ export const envSchema = Joi.object({
       if (!allValid) {
         return helpers.error("any.invalid");
       }
-      return value;
+      return origins;
     }, "CORS origin validation")
     .required(),
 });
