@@ -72,8 +72,13 @@ export class HotelResolver {
   })
   async getReviewScore(@Parent() hotel: Hotel) {
     const reviews = await this.commonService.findReviewsByHotelId(hotel._id);
+    if (reviews.length === 0) return 0;
+
     const totalScore = reviews.reduce((sum, review) => sum + review.rating, 0);
-    const averageScore = totalScore / reviews.length;
+    const averageScore = Math.round(totalScore / reviews.length);
+
+    console.log(reviews, averageScore);
+
     return averageScore;
   }
 

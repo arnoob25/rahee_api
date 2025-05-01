@@ -9,6 +9,7 @@ import {
   IsNumber,
   Min,
   Max,
+  IsInt,
 } from "class-validator";
 
 @InputType()
@@ -58,18 +59,9 @@ export class CreateHotelInput {
     description: "Rating of the hotel. 0-5 stars. Example: 4.5",
   })
   @IsOptional()
+  @IsInt()
   @IsNumber()
   @Min(0)
   @Max(5)
   starRating?: number;
-
-  @Field(() => Float, {
-    nullable: true,
-    description: "Average user review score. 0-10. Example: 8.7",
-  })
-  @IsOptional()
-  @IsNumber()
-  @Min(0)
-  @Max(10)
-  reviewScore?: number;
 }

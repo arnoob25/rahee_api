@@ -14,9 +14,6 @@ input CreateHotelInput {
   """Name of the hotel. Example: 'Porco's Hotel'"""
   name: String!
 
-  """Average user review score. 0-10. Example: 8.7"""
-  reviewScore: Float
-
   """Available types of rooms in a hotel."""
   roomTypeIds: [ID!]!
 
@@ -75,7 +72,7 @@ type Hotel {
   roomTypes: [RoomType!]!
 
   """Rating of the hotel. 0-5 stars"""
-  starRating: Float
+  starRating: Int
 
   """
   Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
@@ -223,9 +220,6 @@ input UpdateHotelInput {
 
   """Name of the hotel. Example: 'Porco's Hotel'"""
   name: String
-
-  """Average user review score. 0-10. Example: 8.7"""
-  reviewScore: Float
 
   """Available types of rooms in a hotel."""
   roomTypeIds: [ID!]

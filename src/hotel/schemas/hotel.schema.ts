@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID, Float } from "@nestjs/graphql";
+import { ObjectType, Field, ID, Float, Int } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 import { Facility, PolicyRule, Tag } from "../enums";
@@ -29,7 +29,7 @@ export class Hotel {
   @Field({ description: "Address of the hotel" })
   address: string;
 
-  @Field(() => Float, {
+  @Field(() => Int, {
     nullable: true,
     description: "Rating of the hotel. 0-5 stars",
   })
