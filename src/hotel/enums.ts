@@ -1,94 +1,94 @@
 import { registerEnumType } from "@nestjs/graphql";
 
 export enum Tag {
-  beach = "beach",
-  luxury = "luxury",
-  family = "family",
-  budget = "budget",
+  Beach = "beach",
+  Luxury = "luxury",
+  Family = "family",
+  Budget = "budget",
 }
 
 export enum Facility {
-  pool = "pool",
-  gym = "gym",
-  cinema = "cinema",
-  conference = "conference",
+  Pool = "pool",
+  Gym = "gym",
+  Cinema = "cinema",
+  Conference = "conference",
 }
 
 export enum RoomCategory {
-  economy = "economy",
-  standard = "standard",
-  deluxe = "deluxe",
-  suite = "suite",
+  Economy = "economy",
+  Standard = "standard",
+  Deluxe = "deluxe",
+  Suite = "suite",
 }
 
 export enum BedType {
-  single = "single",
-  double = "double",
-  queen = "queen",
-  king = "king",
-  sofa = "sofa",
+  Single = "single",
+  Double = "double",
+  Queen = "queen",
+  King = "king",
+  Sofa = "sofa",
 }
 
 export enum Amenity {
-  wifi = "wifi",
-  tv = "tv",
-  pool = "pool",
-  breakfast = "breakfast",
+  Wifi = "wifi",
+  Tv = "tv",
+  Pool = "pool",
+  Breakfast = "breakfast",
 }
 
 export enum MediaType {
-  image = "image",
-  video = "video",
+  Image = "image",
+  Video = "video",
 }
 
 export enum PolicyRule {
   // Check-in/Check-out
-  StandardCheckIn = "StandardCheck-in",
-  EarlyCheckIn = "EarlyCheck-in",
-  LateCheckIn = "LateCheck-in",
-  RequiredDocuments = "RequiredDocuments",
-  StandardCheckOut = "StandardCheck-out",
-  LateCheckOut = "LateCheck-out",
-  ExpressCheckOut = "ExpressCheck-out",
-  LuggageStorage = "LuggageStorage",
-  PorterService = "PorterService",
+  StandardCheckIn = "standard_check_in",
+  EarlyCheckIn = "early_check_in",
+  LateCheckIn = "late_check_in",
+  RequiredDocuments = "required_documents",
+  StandardCheckOut = "standard_check_out",
+  LateCheckOut = "late_check_out",
+  ExpressCheckOut = "express_check_out",
+  LuggageStorage = "luggage_storage",
+  PorterService = "porter_service",
 
   // Payment & Deposits
-  CreditCards = "CreditCards",
-  Cash = "Cash",
-  DigitalWallets = "DigitalWallets",
-  BookingDeposit = "BookingDeposit",
-  IncidentalHold = "IncidentalHold",
-  FreeCancellation = "FreeCancellation",
-  LateCancellation = "LateCancellation",
-  NoShowPolicy = "No-showPolicy",
-  ResortFee = "ResortFee",
-  Parking = "Parking",
-  PetFee = "PetFee",
+  CreditCards = "credit_cards",
+  Cash = "cash",
+  DigitalWallets = "digital_wallets",
+  BookingDeposit = "booking_deposit",
+  IncidentalHold = "incidental_hold",
+  FreeCancellation = "free_cancellation",
+  LateCancellation = "late_cancellation",
+  NoShowPolicy = "no_show_policy",
+  ResortFee = "resort_fee",
+  Parking = "parking",
+  PetFee = "pet_fee",
 
   // Property Rules
-  QuietHours = "QuietHours",
-  ExcessiveNoise = "ExcessiveNoise",
-  NonSmokingRooms = "Non-smokingRooms",
-  DesignatedSmokingAreas = "DesignatedSmokingAreas",
-  ViolationFee = "ViolationFee",
-  AllowedPets = "AllowedPets",
-  PetAmenities = "PetAmenities",
-  ServiceAnimals = "ServiceAnimals",
-  HoursOfOperation = "HoursOfOperation",
-  AgeRestrictions = "AgeRestrictions",
-  ProperAttire = "ProperAttire",
+  QuietHours = "quiet_hours",
+  ExcessiveNoise = "excessive_noise",
+  NonSmokingRooms = "non_smoking_rooms",
+  DesignatedSmokingAreas = "designated_smoking_areas",
+  ViolationFee = "violation_fee",
+  AllowedPets = "allowed_pets",
+  PetAmenities = "pet_amenities",
+  ServiceAnimals = "service_animals",
+  HoursOfOperation = "hours_of_operation",
+  AgeRestrictions = "age_restrictions",
+  ProperAttire = "proper_attire",
 
   // Additional Policies
-  WiFiAvailability = "WiFiAvailability",
-  PremiumWiFi = "PremiumWiFi",
-  SelfParking = "Self-parking",
-  ValetParking = "ValetParking",
-  ElectricVehicleCharging = "ElectricVehicleCharging",
-  MinimumCheckInAge = "MinimumCheck-inAge",
-  Minors = "Minors",
-  ADACompliantRooms = "ADACompliantRooms",
-  MobilityEquipment = "MobilityEquipment",
+  WiFiAvailability = "wifi_availability",
+  PremiumWiFi = "premium_wifi",
+  SelfParking = "self_parking",
+  ValetParking = "valet_parking",
+  ElectricVehicleCharging = "electric_vehicle_charging",
+  MinimumCheckInAge = "minimum_check_in_age",
+  Minors = "minors",
+  ADACompliantRooms = "ada_compliant_rooms",
+  MobilityEquipment = "mobility_equipment",
 }
 
 registerEnumType(Tag, {

@@ -42,7 +42,7 @@ export class Hotel {
   @Prop({ required: true, type: [{ type: Types.ObjectId, ref: "Media" }] })
   mediaIds: Types.ObjectId[];
 
-  @Field(() => [Tag], {
+  @Field(() => [String], {
     nullable: true,
     description:
       "Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.",
@@ -50,7 +50,7 @@ export class Hotel {
   @Prop({ type: [String], enum: Object.values(Tag) })
   tags?: Tag[];
 
-  @Field(() => [Facility], {
+  @Field(() => [String], {
     nullable: true,
     description:
       "Facilities offered by the hotel. Example: 24hr Check in, Pool Access, etc.",
@@ -58,7 +58,7 @@ export class Hotel {
   @Prop({ type: [String], enum: Object.values(Facility) })
   facilities?: Facility[];
 
-  @Field(() => [PolicyRule], {
+  @Field(() => [String], {
     nullable: true,
     description:
       "Specifies the rule the hotel conforms to. Example: No check out after 12 pm.",

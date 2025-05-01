@@ -19,14 +19,14 @@ export class RoomType {
   @Prop({ required: true, maxlength: 255 })
   name: string;
 
-  @Field(() => RoomCategory, {
+  @Field(() => String, {
     description:
       "Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.",
   })
   @Prop({ required: true, type: String, enum: Object.values(RoomCategory) })
   roomCategory: RoomCategory;
 
-  @Field(() => BedType, {
+  @Field(() => String, {
     description: "Type of the bed in this room (e.g., King, Single).",
   })
   @Prop({ required: true, type: String, enum: Object.values(BedType) })
@@ -58,7 +58,7 @@ export class RoomType {
   @Prop({ required: true, type: [{ type: Types.ObjectId, ref: "Media" }] })
   mediaIds: Types.ObjectId[];
 
-  @Field(() => [Amenity], {
+  @Field(() => [String], {
     nullable: true,
     description:
       "Perks that come with the room. Example: Free wifi, Room service, etc.",

@@ -2,25 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""Perks that come with the room. Example: Free wifi, Room service, etc."""
-enum Amenity {
-  breakfast
-  pool
-  tv
-  wifi
-}
-
-"""
-Describes the type of bed for a room type. Example: Single bed, double bed, etc.
-"""
-enum BedType {
-  double
-  king
-  queen
-  single
-  sofa
-}
-
 input CreateHotelInput {
   """Address of the hotel. Example: '123 Ocean Ave, Beach City, USA'"""
   address: String!
@@ -48,16 +29,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""
-Facilities offered by the hotel. Example: 24hr Check in, Pool Access, etc.
-"""
-enum Facility {
-  cinema
-  conference
-  gym
-  pool
-}
-
 """Data for a hotel"""
 type Hotel {
   """Unique identifier for a hotel"""
@@ -72,7 +43,7 @@ type Hotel {
   """
   Facilities offered by the hotel. Example: 24hr Check in, Pool Access, etc.
   """
-  facilities: [Facility!]
+  facilities: [String!]
 
   """Finds the related images and videos for a hotel."""
   media: [Media!]!
@@ -86,7 +57,7 @@ type Hotel {
   """
   Specifies the rule the hotel conforms to. Example: No check out after 12 pm.
   """
-  policies: [PolicyRule!]
+  policies: [String!]
 
   """Number of reviews received by the hotel."""
   reviewCount: Float!
@@ -109,7 +80,7 @@ type Hotel {
   """
   Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
   """
-  tags: [Tag!]
+  tags: [String!]
 }
 
 """A media asset, such as an image or video, associated with content."""
@@ -124,16 +95,10 @@ type Media {
   isFeatured: Boolean
 
   """The type of media, either image or video."""
-  type: MediaType!
+  type: String!
 
   """The URL where the media file is hosted."""
   url: String!
-}
-
-"""Specifies whether the media is an image or a video."""
-enum MediaType {
-  image
-  video
 }
 
 type Mutation {
@@ -145,52 +110,6 @@ type Mutation {
 
   """Find a hotel by its ID, and update its data."""
   updateOneHotel(id: String!, updateHotelInput: UpdateHotelInput!): Hotel!
-}
-
-"""
-Specifies the rule the hotel conforms to. Example: No check out after 12 pm.
-"""
-enum PolicyRule {
-  ADACompliantRooms
-  AgeRestrictions
-  AllowedPets
-  BookingDeposit
-  Cash
-  CreditCards
-  DesignatedSmokingAreas
-  DigitalWallets
-  EarlyCheckIn
-  ElectricVehicleCharging
-  ExcessiveNoise
-  ExpressCheckOut
-  FreeCancellation
-  HoursOfOperation
-  IncidentalHold
-  LateCancellation
-  LateCheckIn
-  LateCheckOut
-  LuggageStorage
-  MinimumCheckInAge
-  Minors
-  MobilityEquipment
-  NoShowPolicy
-  NonSmokingRooms
-  Parking
-  PetAmenities
-  PetFee
-  PorterService
-  PremiumWiFi
-  ProperAttire
-  QuietHours
-  RequiredDocuments
-  ResortFee
-  SelfParking
-  ServiceAnimals
-  StandardCheckIn
-  StandardCheckOut
-  ValetParking
-  ViolationFee
-  WiFiAvailability
 }
 
 type Query {
@@ -246,16 +165,6 @@ type Room {
 }
 
 """
-Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.
-"""
-enum RoomCategory {
-  deluxe
-  economy
-  standard
-  suite
-}
-
-"""
 Represents a type of room in a hotel, including details about pricing, bed type, and maximum capacity. Example: Deluxe, Standard, etc.
 """
 type RoomType {
@@ -263,10 +172,10 @@ type RoomType {
   _id: ID!
 
   """Perks that come with the room. Example: Free wifi, Room service, etc."""
-  amenities: [Amenity!]
+  amenities: [String!]
 
   """Type of the bed in this room (e.g., King, Single)."""
-  bedType: BedType!
+  bedType: String!
 
   """
   The number of complementary children that can stay in this room type, if any.
@@ -291,23 +200,13 @@ type RoomType {
   """
   Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.
   """
-  roomCategory: RoomCategory!
+  roomCategory: String!
 
   """Finds and counts the individual rooms for this room type."""
   roomCount: Float!
 
   """Finds the individual rooms of this room type."""
   rooms: [Room!]!
-}
-
-"""
-Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
-"""
-enum Tag {
-  beach
-  budget
-  family
-  luxury
 }
 
 input UpdateHotelInput {

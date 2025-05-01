@@ -13,7 +13,7 @@ export class Media {
   _id: Types.ObjectId;
 
   @Prop({ required: true, type: String, enum: Object.values(MediaType) })
-  @Field(() => MediaType, {
+  @Field(() => String, {
     description: "The type of media, either image or video.",
   })
   type: MediaType;
