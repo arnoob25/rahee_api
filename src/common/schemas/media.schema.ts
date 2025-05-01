@@ -12,6 +12,10 @@ export class Media {
   @Field(() => ID, { description: "Unique identifier for the media item." })
   _id: Types.ObjectId;
 
+  @Field({ description: "Caption of the media." })
+  @Prop({ required: true })
+  caption: string;
+
   @Prop({ required: true, type: String, enum: Object.values(MediaType) })
   @Field(() => String, {
     description: "The type of media, either image or video.",

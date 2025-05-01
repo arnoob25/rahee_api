@@ -88,6 +88,9 @@ type Media {
   """Unique identifier for the media item."""
   _id: ID!
 
+  """Caption of the media."""
+  caption: String!
+
   """Marks this media as the cover image."""
   isCover: Boolean
 

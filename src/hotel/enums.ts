@@ -52,6 +52,9 @@ export enum PolicyRule {
   ExpressCheckOut = "express_check_out",
   LuggageStorage = "luggage_storage",
   PorterService = "porter_service",
+  TwoPMCheckIn = "two_pm_check_in",
+  ElevenAMCheckOut = "eleven_am_check_out",
+  PayAtCheckOut = "pay_at_check_out",
 
   // Payment & Deposits
   CreditCards = "credit_cards",
