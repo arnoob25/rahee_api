@@ -4,7 +4,8 @@ import { MongooseModule } from "@nestjs/mongoose";
 import { Media, MediaSchema } from "./schemas/media.schema";
 import { Review, ReviewSchema } from "./schemas/review.schema";
 import { User, UserSchema } from "./schemas/user.schema";
-import { ReviewResolver } from './review/review.resolver';
+import { ReviewResolver } from "./review/review.resolver";
+import { Location, LocationSchema } from "./schemas/location.schema";
 
 @Global()
 @Module({
@@ -12,6 +13,9 @@ import { ReviewResolver } from './review/review.resolver';
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([{ name: Media.name, schema: MediaSchema }]),
     MongooseModule.forFeature([{ name: Review.name, schema: ReviewSchema }]),
+    MongooseModule.forFeature([
+      { name: Location.name, schema: LocationSchema },
+    ]),
   ],
   providers: [CommonService, ReviewResolver],
   exports: [CommonService],
