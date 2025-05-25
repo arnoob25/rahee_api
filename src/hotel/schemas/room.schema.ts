@@ -28,12 +28,6 @@ export class Room {
     description: "The floor on which the room is located.",
   })
   floorNumber: number;
-
-  @Prop({ required: true })
-  @Field({
-    description: "Whether the room is currently available for booking.",
-  })
-  availability: boolean;
 }
 
 export type RoomDocument = HydratedDocument<Room>;

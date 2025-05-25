@@ -2,6 +2,7 @@ import { Field, ID, ObjectType, Int, Float } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 import { Amenity, BedType, RoomCategory } from "../enums";
+import { ROOM_TYPE_CONFIG } from "../config";
 
 @ObjectType({
   description:
@@ -35,13 +36,21 @@ export class RoomType {
   @Field(() => Float, {
     description: "The price per night for this room type.",
   })
-  @Prop({ required: true, min: 0, max: 9999999 })
+  @Prop({
+    required: true,
+    min: ROOM_TYPE_CONFIG.MIN_PRICE_PER_NIGHT,
+    max: ROOM_TYPE_CONFIG.MAX_PRICE_PER_NIGHT,
+  })
   pricePerNight: number;
 
   @Field(() => Int, {
     description: "The maximum number of adults that can occupy this room type.",
   })
-  @Prop({ required: true, min: 1, max: 20 })
+  @Prop({
+    required: true,
+    min: ROOM_TYPE_CONFIG.MIN_ALLOWED_ADULTS,
+    max: ROOM_TYPE_CONFIG.MAX_ALLOWED_ADULTS,
+  })
   maxAdults: number;
 
   @Field(() => Int, {
@@ -49,7 +58,11 @@ export class RoomType {
     description:
       "The number of complementary children that can stay in this room type, if any.",
   })
-  @Prop({ default: 0, min: 0, max: 20 })
+  @Prop({
+    default: 0,
+    min: ROOM_TYPE_CONFIG.MIN_ALLOWED_CHILD,
+    max: ROOM_TYPE_CONFIG.MAX_ALLOWED_CHILD,
+  })
   complementaryChild?: number;
 
   @Field(() => [ID], {
