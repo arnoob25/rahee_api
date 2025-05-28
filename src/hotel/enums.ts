@@ -14,6 +14,9 @@ export enum Tag {
 
 export enum Facility {
   Pool = "pool",
+  Golf = "golf",
+  PlayGround = "playground",
+  BabySitting = "babysitting",
   Gym = "gym",
   Cinema = "cinema",
   Conference = "conference",
