@@ -8,6 +8,7 @@ import { Room, RoomSchema } from "./schemas/room.schema";
 import { RoomTypeService } from "./room-type/room-type.service";
 import { RoomService } from "./room/room.service";
 import { RoomTypeResolver } from "./room-type/room-type.resolver";
+import { Reservation, ReservationSchema } from "./schemas/reservation.schema";
 
 @Module({
   imports: [
@@ -16,6 +17,9 @@ import { RoomTypeResolver } from "./room-type/room-type.resolver";
       { name: RoomType.name, schema: RoomTypeSchema },
     ]),
     MongooseModule.forFeature([{ name: Room.name, schema: RoomSchema }]),
+    MongooseModule.forFeature([
+      { name: Reservation.name, schema: ReservationSchema },
+    ]),
   ],
   providers: [
     HotelResolver,

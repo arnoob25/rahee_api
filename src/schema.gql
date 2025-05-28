@@ -14,14 +14,11 @@ input CreateHotelInput {
   """Name of the hotel. Example: 'Porco's Hotel'"""
   name: String!
 
-  """Average user review score. 0-10. Example: 8.7"""
-  reviewScore: Float
-
   """Available types of rooms in a hotel."""
   roomTypeIds: [ID!]!
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
-  starRating: Float
+  stars: Float
 }
 
 """
@@ -29,13 +26,77 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+input FilterHotelsInput {
+  """Type of accommodation. Example: Hotel, Resort, etc."""
+  accommodationTypes: [String!]
+
+  """Number of adult guests. Must be at least 1."""
+  adults: Int!
+
+  """
+  Perks that come with the room (Must exist in the Amenity enum). Example: Free wifi, Room service, etc.
+  """
+  amenities: [String!]
+
+  """Check-in date in ISO 8601 format (YYYY-MM-DD)."""
+  checkInDate: String!
+
+  """Check-out date in ISO 8601 format (YYYY-MM-DD)."""
+  checkOutDate: String!
+
+  """Number of child guests. Must be 0 or more."""
+  children: Int = 0
+
+  """
+  City to filer the hotels by (Must exist in the City enum). Example: Dhaka, Sylhet.
+  """
+  city: String
+
+  """
+  Facilities offered by the hotel (Must exist in the Facility enum). Example: 24hr Check in, Pool Access, etc.
+  """
+  facilities: [String!]
+
+  """The unique identifier used to filter by property address."""
+  locationId: ID
+
+  """Maximum price per night (in the relevant currency)."""
+  maxPrice: Float!
+
+  """Minimum price per night (in the relevant currency)."""
+  minPrice: Float!
+
+  """Minimum average review score. Must be between 0 and 10."""
+  minRating: Float
+
+  """
+  Sort by popularity (average aggregated guest rating). Most popular (highest avg. rating) to least popular and vice versa.
+  """
+  popularitySort: String
+
+  """Sort by price (Lowest to highest, or highest to lowest)."""
+  priceSort: String
+
+  """Hotel star rating. Must be between 1 and 5."""
+  stars: Int
+
+  """
+  Generic labels that highlights key features of a hotel (Must exist in the Tag enum). Example: Budget Friendly.
+  """
+  tags: [String!]
+}
+
 """Data for a hotel"""
 type Hotel {
   """Unique identifier for a hotel"""
   _id: ID!
 
-  """Address of the hotel"""
-  address: String!
+  """Type of accommodation. Example: Hotel, Resort, etc."""
+  accommodationType: String!
+
+  """Number of available rooms in the hotel."""
+  availableRoomCount(checkInDate: String!, checkOutDate: String!): Float!
+  city: String
 
   """Description of the hotel"""
   description: String!
@@ -44,6 +105,12 @@ type Hotel {
   Facilities offered by the hotel. Example: 24hr Check in, Pool Access, etc.
   """
   facilities: [String!]
+
+  """Location data for the hotel. Area, city, co-ordinates, etc."""
+  location: Location
+
+  """Reference to the location object of the hotel."""
+  locationId: ID!
 
   """Finds the related images and videos for a hotel."""
   media: [Media!]!
@@ -63,7 +130,7 @@ type Hotel {
   reviewCount: Float!
 
   """Average user review score. 0-10"""
-  reviewScore: Float!
+  reviewScore: Float
 
   """Finds all the user reviews for a hotel"""
   reviews: [Review!]!
@@ -75,12 +142,52 @@ type Hotel {
   roomTypes: [RoomType!]!
 
   """Rating of the hotel. 0-5 stars"""
-  starRating: Float
+  stars: Int
+
+  """Price of the room with the lowest rate in the hotel."""
+  startingPrice: Float
 
   """
   Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
   """
   tags: [String!]
+}
+
+"""
+Represents a geographic location, including label, address, city, state, country, and geolocation data.
+"""
+type Location {
+  """Unique identifier for the location."""
+  _id: ID!
+
+  """Street address of the location."""
+  address: String
+
+  """City where the location is situated."""
+  city: String
+
+  """Country of the location."""
+  country: String!
+
+  """
+  Label or short name used to identify the location (e.g., 'Dhaka City Center').
+  """
+  label: String
+
+  """Latitude coordinate for geolocation-based features."""
+  latitude: Float
+
+  """Longitude coordinate for geolocation-based features."""
+  longitude: Float
+
+  """State or administrative region of the location."""
+  state: String
+
+  """Type of the location. Example: Country, City, Property, etc."""
+  type: String
+
+  """ZIP or postal code, if applicable."""
+  zipCode: String
 }
 
 """A media asset, such as an image or video, associated with content."""
@@ -116,6 +223,9 @@ type Mutation {
 }
 
 type Query {
+  """Filter and sort hotels from the database."""
+  filterHotels(filters: FilterHotelsInput!): [Hotel!]!
+
   """Get all the hotels in the database."""
   findHotels: [Hotel!]!
 
@@ -154,11 +264,13 @@ type Room {
   """Unique identifier for the room."""
   _id: ID!
 
-  """Whether the room is currently available for booking."""
-  availability: Boolean!
-
   """The floor on which the room is located."""
   floorNumber: Int!
+
+  """
+  Whether the room is out of service or not. Ideally rooms are servicing and can be reserved.
+  """
+  isAvailable: Boolean!
 
   """Specific number assigned to the room."""
   roomNumber: Int!
@@ -224,14 +336,11 @@ input UpdateHotelInput {
   """Name of the hotel. Example: 'Porco's Hotel'"""
   name: String
 
-  """Average user review score. 0-10. Example: 8.7"""
-  reviewScore: Float
-
   """Available types of rooms in a hotel."""
   roomTypeIds: [ID!]
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
-  starRating: Float
+  stars: Float
 }
 
 """Registered user of our service."""

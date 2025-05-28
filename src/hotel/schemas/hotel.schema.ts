@@ -1,7 +1,8 @@
-import { ObjectType, Field, ID, Float } from "@nestjs/graphql";
+import { ObjectType, Field, ID, Int, Float } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
-import { Facility, PolicyRule, Tag } from "../enums";
+import { Accommodation, City, Facility, PolicyRule, Tag } from "../enums";
+import { HOTEL_CONFIG } from "../config";
 
 @ObjectType({ description: "Data for a hotel" })
 @Schema({ timestamps: true })
@@ -25,16 +26,33 @@ export class Hotel {
   })
   roomTypeIds: Types.ObjectId[];
 
-  @Prop({ required: true, maxlength: 800 })
-  @Field({ description: "Address of the hotel" })
-  address: string;
+  @Field(() => ID, {
+    description: "Reference to the location object of the hotel.",
+  })
+  @Prop({ required: true, type: Types.ObjectId, ref: "Location" })
+  locationId: Types.ObjectId;
 
-  @Field(() => Float, {
+  @Field(() => String, { nullable: true })
+  @Prop({ required: true, type: String, enum: Object.values(City) }) // only used to filter hotels by city
+  city: City;
+
+  @Field(() => Int, {
     nullable: true,
     description: "Rating of the hotel. 0-5 stars",
   })
   @Prop({ default: 0, min: 0, max: 5 })
-  starRating?: number;
+  stars?: number;
+
+  @Field(() => Float, {
+    nullable: true,
+    description: "Average user review score. 0-10",
+  })
+  @Prop({
+    default: 0,
+    min: HOTEL_CONFIG.MIN_REVIEW_SCORE,
+    max: HOTEL_CONFIG.MAX_REVIEW_SCORE,
+  })
+  reviewScore?: number;
 
   @Field(() => [ID], {
     description: "Media references (images/ videos) for a hotel.",
@@ -65,6 +83,12 @@ export class Hotel {
   })
   @Prop({ type: [String], enum: Object.values(PolicyRule) })
   policies?: PolicyRule[];
+
+  @Field(() => String, {
+    description: "Type of accommodation. Example: Hotel, Resort, etc.",
+  })
+  @Prop({ type: String, required: true, enum: Object.values(Accommodation) })
+  accommodationType: Accommodation;
 }
 
 export type HotelDocument = HydratedDocument<Hotel>;

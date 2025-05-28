@@ -1,5 +1,10 @@
 import { registerEnumType } from "@nestjs/graphql";
 
+export enum Accommodation {
+  Hotel = "hotel",
+  Resort = "resort",
+}
+
 export enum Tag {
   Beach = "beach",
   Luxury = "luxury",
@@ -9,6 +14,9 @@ export enum Tag {
 
 export enum Facility {
   Pool = "pool",
+  Golf = "golf",
+  PlayGround = "playground",
+  BabySitting = "babysitting",
   Gym = "gym",
   Cinema = "cinema",
   Conference = "conference",
@@ -94,6 +102,49 @@ export enum PolicyRule {
   MobilityEquipment = "mobility_equipment",
 }
 
+export enum City {
+  Dhaka = "dhaka",
+  Chittagong = "chittagong",
+  Khulna = "khulna",
+  Sylhet = "sylhet",
+  Rajshahi = "rajshahi",
+  Barishal = "barishal",
+  Rangpur = "rangpur",
+  Mymensingh = "mymensingh",
+}
+
+export enum State {
+  DhakaDivision = "dhaka_division",
+  ChittagongDivision = "chittagong_division",
+  KhulnaDivision = "khulna_division",
+  SylhetDivision = "sylhet_division",
+  RajshahiDivision = "rajshahi_division",
+  BarishalDivision = "barishal_division",
+  RangpurDivision = "rangpur_division",
+  MymensinghDivision = "mymensingh_division",
+}
+
+export enum Country {
+  Bangladesh = "bangladesh",
+  India = "india",
+  Usa = "usa",
+  Canada = "canada",
+  Uk = "uk",
+  Australia = "australia",
+}
+
+export enum LocationType {
+  Country = "country",
+  City = "city",
+  TouristAttraction = "attraction",
+  Property = "property",
+}
+
+registerEnumType(Accommodation, {
+  name: "Accommodation",
+  description: "Type of accommodation. Example: Hotel, Resort, etc.",
+});
+
 registerEnumType(Tag, {
   name: "Tag",
   description:
@@ -133,4 +184,24 @@ registerEnumType(PolicyRule, {
   name: "PolicyRule",
   description:
     "Specifies the rule the hotel conforms to. Example: No check out after 12 pm.",
+});
+
+registerEnumType(City, {
+  name: "CityEnum",
+  description: "Supported cities for location filtering.",
+});
+
+registerEnumType(State, {
+  name: "StateEnum",
+  description: "Supported states or divisions for location filtering.",
+});
+
+registerEnumType(Country, {
+  name: "CountryEnum",
+  description: "Supported countries for location filtering.",
+});
+
+registerEnumType(LocationType, {
+  name: "LocationType",
+  description: "Type of the location. Example: Country, City, Property, etc.",
 });

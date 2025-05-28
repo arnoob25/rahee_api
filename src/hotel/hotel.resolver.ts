@@ -17,12 +17,20 @@ import { RoomTypeService } from "./room-type/room-type.service";
 import { Media } from "src/common/schemas/media.schema";
 import { CommonService } from "src/common/common.service";
 import { Review } from "src/common/schemas/review.schema";
+import { RoomService } from "./room/room.service";
+import { FilterHotelsInput } from "./dto/filter-hotels.input";
+import { ParseDatePipe } from "@nestjs/common";
+import { getHotelFilters, getRoomFilters, getRoomTypeFilters } from "./types";
+import { Location } from "src/common/schemas/location.schema";
+import { getUniqueObjectIds } from "src/common/utils/mongo.util";
+import { SORT_ORDER } from "src/common/enums";
 
 @Resolver(() => Hotel)
 export class HotelResolver {
   constructor(
     private readonly hotelService: HotelService,
     private readonly roomTypeService: RoomTypeService,
+    private readonly roomService: RoomService,
     private readonly commonService: CommonService
   ) {}
 
@@ -35,7 +43,86 @@ export class HotelResolver {
 
   @Query(() => [Hotel], { description: "Get all the hotels in the database." })
   async findHotels() {
-    return this.hotelService.findAll();
+    return this.hotelService.find();
+  }
+
+  @Query(() => [Hotel], {
+    description: "Filter and sort hotels from the database.",
+  })
+  async filterHotels(@Args("filters") filters: FilterHotelsInput) {
+    // narrow down scope by filtering out hotels with primary attributes
+    const initialHotels = await this.hotelService.filter(
+      getHotelFilters(filters)
+    );
+
+    if (!initialHotels.length) return [];
+
+    // find room types in these hotels that satisfy respective filters - to narrow down scope
+    let narrowedDownRoomTypeIds = getUniqueObjectIds(
+      initialHotels.map((hotel) => hotel.roomTypeIds).flat()
+    );
+
+    const filteredRoomTypes = await this.roomTypeService.filter(
+      getRoomTypeFilters(filters),
+      narrowedDownRoomTypeIds
+    );
+
+    if (!filteredRoomTypes) return [];
+
+    narrowedDownRoomTypeIds = filteredRoomTypes.map((roomType) => roomType._id);
+
+    // check if these room types have rooms available - further narrow down the scope
+    const availableRooms = await this.roomService.findAvailable(
+      getRoomFilters(filters),
+      narrowedDownRoomTypeIds
+    );
+
+    if (!availableRooms) return [];
+
+    const availableRoomTypeIds = new Set(
+      availableRooms.map((room) => room.roomTypeId.toString())
+    );
+
+    // these hotel themselves along with their room types with available rooms also satisfy the filters
+    // if applied, these hotels are sorted by popularity (guest rating)
+    const finalHotels = initialHotels.filter((hotel) =>
+      hotel.roomTypeIds.some((id) => availableRoomTypeIds.has(id.toString()))
+    );
+
+    // optionally, sort by price
+    if (filters.priceSort) {
+      const roomTypeMap = new Map(
+        filteredRoomTypes.map((rt) => [rt._id.toString(), rt])
+      );
+
+      // Map each hotel ID to its minimum available room price
+      const hotelToMinPrice = new Map<string, number>();
+
+      for (const hotel of finalHotels) {
+        const prices = hotel.roomTypeIds
+          .map((id) => roomTypeMap.get(id.toString()))
+          .filter(
+            (rt): rt is (typeof filteredRoomTypes)[number] =>
+              !!rt && availableRoomTypeIds.has(rt._id.toString())
+          )
+          .map((rt) => rt.pricePerNight);
+
+        if (prices.length) {
+          hotelToMinPrice.set(hotel._id.toString(), Math.min(...prices));
+        }
+      }
+
+      finalHotels.sort((a, b) => {
+        const aPrice = hotelToMinPrice.get(a._id.toString()) ?? Infinity;
+        const bPrice = hotelToMinPrice.get(b._id.toString()) ?? Infinity;
+
+        return filters.priceSort === SORT_ORDER.ASC
+          ? aPrice - bPrice
+          : bPrice - aPrice;
+      });
+    }
+
+    return finalHotels;
   }
 
   @Query(() => Hotel, { nullable: true, description: "Find a hotel by its ID" })
@@ -59,7 +146,14 @@ export class HotelResolver {
     return this.commonService.findMediaByIds(hotel.mediaIds);
   }
 
-  // TODO: need to implement pagination
+  @ResolveField("location", () => Location, {
+    nullable: true,
+    description: "Location data for the hotel. Area, city, co-ordinates, etc.",
+  })
+  async getLocation(@Parent() hotel: Hotel) {
+    return this.commonService.findLocationById(hotel.locationId);
+  }
+
   @ResolveField("reviews", () => [Review], {
     description: "Finds all the user reviews for a hotel",
   })
@@ -67,21 +161,44 @@ export class HotelResolver {
     return this.commonService.findReviewsByHotelId(hotel._id);
   }
 
-  @ResolveField("reviewScore", () => Number, {
-    description: "Average user review score. 0-10",
-  })
-  async getReviewScore(@Parent() hotel: Hotel) {
-    const reviews = await this.commonService.findReviewsByHotelId(hotel._id);
-    const totalScore = reviews.reduce((sum, review) => sum + review.rating, 0);
-    const averageScore = totalScore / reviews.length;
-    return averageScore;
-  }
-
   @ResolveField("reviewCount", () => Number, {
     description: "Number of reviews received by the hotel.",
   })
-  async getReviewCount(@Parent() hotel: Hotel) {
+  async countReviews(@Parent() hotel: Hotel) {
     return (await this.commonService.findReviewsByHotelId(hotel._id)).length;
+  }
+
+  @ResolveField("startingPrice", () => Number, {
+    nullable: true,
+    description: "Price of the room with the lowest rate in the hotel.",
+  })
+  async getStartingPrice(@Parent() hotel: Hotel) {
+    const roomTypes = await this.roomTypeService.findByIds(hotel.roomTypeIds);
+    if (roomTypes.length === 0) return null;
+    const prices = roomTypes.map((rt) => rt.pricePerNight);
+    return Math.min(...prices);
+  }
+
+  @ResolveField("availableRoomCount", () => Number, {
+    description: "Number of available rooms in the hotel.",
+  })
+  async countAvailableRooms(
+    @Parent() hotel: Hotel,
+    @Args("checkInDate", { type: () => String }, new ParseDatePipe())
+    checkInDate: Date,
+    @Args("checkOutDate", { type: () => String }, new ParseDatePipe())
+    checkOutDate: Date
+  ) {
+    const roomTypes = await this.roomTypeService.findByIds(hotel.roomTypeIds);
+    const roomTypeIdsToCheck = roomTypes.map((roomType) => roomType._id); // narrow down context
+    if (!roomTypeIdsToCheck) return 0;
+
+    const availableRooms = this.roomService.findAvailable(
+      { checkInDate, checkOutDate },
+      roomTypeIdsToCheck
+    );
+
+    return (await availableRooms).length;
   }
 
   @Mutation(() => Hotel, {

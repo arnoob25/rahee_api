@@ -4,6 +4,8 @@ import { UpdateHotelInput } from "./dto/update-hotel.input";
 import { InjectModel } from "@nestjs/mongoose";
 import { Hotel } from "./schemas/hotel.schema";
 import { Model, Types } from "mongoose";
+import { HotelFilters } from "./types";
+import { SORT_ORDER } from "src/common/enums";
 
 @Injectable()
 export class HotelService {
@@ -15,8 +17,68 @@ export class HotelService {
     return this.hotelModel.create(createHotelInput);
   }
 
-  async findAll(): Promise<Hotel[]> {
+  async find(): Promise<Hotel[]> {
     return this.hotelModel.find();
+  }
+
+  async filter(input: HotelFilters): Promise<Hotel[]> {
+    const filterQuery: {
+      accommodationType?: { $in: string[] };
+      city?: string;
+      locationId?: Types.ObjectId;
+      reviewScore?: { $gte: number };
+      stars?: number;
+      tags?: { $all: string[] };
+      facilities?: { $all: string[] };
+      roomTypeIds?: { $in: Types.ObjectId[] };
+    } = {};
+
+    const {
+      accommodationTypes,
+      city,
+      locationId,
+      facilities,
+      minRating,
+      stars,
+      tags,
+      popularitySort,
+    } = input;
+
+    if (accommodationTypes) {
+      filterQuery.accommodationType = { $in: accommodationTypes };
+    }
+
+    if (city) {
+      filterQuery.city = city;
+    }
+
+    if (locationId) {
+      filterQuery.locationId = locationId;
+    }
+
+    if (minRating) {
+      filterQuery.reviewScore = { $gte: minRating };
+    }
+
+    if (stars) {
+      filterQuery.stars = stars;
+    }
+
+    if (tags && tags.length > 0) {
+      filterQuery.tags = { $all: tags };
+    }
+
+    if (facilities && facilities.length > 0) {
+      filterQuery.facilities = { $all: facilities };
+    }
+
+    const query = this.hotelModel.find(filterQuery);
+
+    if (popularitySort) {
+      query.sort({ reviewScore: popularitySort === SORT_ORDER.ASC ? 1 : -1 });
+    }
+
+    return await query.exec();
   }
 
   async findOne(id: Types.ObjectId): Promise<Hotel> {
