@@ -23,7 +23,7 @@ export class HotelService {
 
   async filter(input: HotelFilters): Promise<Hotel[]> {
     const filterQuery: {
-      type?: string;
+      accommodationType?: { $in: string[] };
       city?: string;
       locationId?: Types.ObjectId;
       reviewScore?: { $gte: number };
@@ -34,7 +34,7 @@ export class HotelService {
     } = {};
 
     const {
-      type,
+      accommodationTypes,
       city,
       locationId,
       facilities,
@@ -44,8 +44,8 @@ export class HotelService {
       popularitySort,
     } = input;
 
-    if (type) {
-      filterQuery.type = type;
+    if (accommodationTypes) {
+      filterQuery.accommodationType = { $in: accommodationTypes };
     }
 
     if (city) {

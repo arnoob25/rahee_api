@@ -88,7 +88,7 @@ export class Hotel {
     description: "Type of accommodation. Example: Hotel, Resort, etc.",
   })
   @Prop({ type: String, required: true, enum: Object.values(Accommodation) })
-  type: Accommodation;
+  accommodationType: Accommodation;
 }
 
 export type HotelDocument = HydratedDocument<Hotel>;

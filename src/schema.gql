@@ -27,6 +27,9 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 input FilterHotelsInput {
+  """Type of accommodation. Example: Hotel, Resort, etc."""
+  accommodationTypes: String
+
   """Number of adult guests. Must be at least 1."""
   adults: Int!
 
@@ -81,15 +84,15 @@ input FilterHotelsInput {
   Generic labels that highlights key features of a hotel (Must exist in the Tag enum). Example: Budget Friendly.
   """
   tags: [String!]
-
-  """Type of accommodation. Example: Hotel, Resort, etc."""
-  type: String
 }
 
 """Data for a hotel"""
 type Hotel {
   """Unique identifier for a hotel"""
   _id: ID!
+
+  """Type of accommodation. Example: Hotel, Resort, etc."""
+  accommodationType: String!
 
   """Number of available rooms in the hotel."""
   availableRoomCount(checkInDate: String!, checkOutDate: String!): Float!
@@ -148,9 +151,6 @@ type Hotel {
   Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
   """
   tags: [String!]
-
-  """Type of accommodation. Example: Hotel, Resort, etc."""
-  type: String!
 }
 
 """

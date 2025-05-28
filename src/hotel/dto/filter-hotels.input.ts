@@ -24,11 +24,13 @@ export class FilterHotelsInput {
     description: "Type of accommodation. Example: Hotel, Resort, etc.",
   })
   @IsOptional()
-  @IsEnum(Accommodation, {
+  @IsArray()
+  @IsEnum([Accommodation], {
+    each: true,
     message:
-      "Accommodation type must be one of the allowed Accommodation enum values.",
+      "Accommodation types must be one of the allowed Accommodation enum values.",
   })
-  type?: string;
+  accommodationTypes?: string[];
 
   @Expose()
   @Field(() => String, {

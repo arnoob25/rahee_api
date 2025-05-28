@@ -4,7 +4,7 @@ import { BadRequestException } from "@nestjs/common";
 import { SORT_ORDER } from "src/common/enums";
 
 export type HotelFilters = {
-  type?: string; // accommodation type e.g. hotel, resort
+  accommodationTypes?: string[]; // accommodation type e.g. hotel, resort
   locationId?: Types.ObjectId;
   city?: string;
   minRating?: number;
@@ -36,7 +36,7 @@ export function getHotelFilters(input: FilterHotelsInput): HotelFilters {
   }
 
   return {
-    type: input.type,
+    accommodationTypes: input.accommodationTypes,
     city: input.city,
     locationId: input.locationId
       ? new Types.ObjectId(input.locationId)
