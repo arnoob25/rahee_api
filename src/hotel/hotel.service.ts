@@ -27,7 +27,7 @@ export class HotelService {
       city?: string;
       locationId?: Types.ObjectId;
       reviewScore?: { $gte: number };
-      stars?: { $gte: number };
+      stars?: number;
       tags?: { $all: string[] };
       facilities?: { $all: string[] };
       roomTypeIds?: { $in: Types.ObjectId[] };
@@ -61,7 +61,7 @@ export class HotelService {
     }
 
     if (stars) {
-      filterQuery.stars = { $gte: stars };
+      filterQuery.stars = stars;
     }
 
     if (tags && tags.length > 0) {

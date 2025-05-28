@@ -58,10 +58,10 @@ input FilterHotelsInput {
   locationId: ID
 
   """Maximum price per night (in the relevant currency)."""
-  maxPrice: Float
+  maxPrice: Float!
 
   """Minimum price per night (in the relevant currency)."""
-  minPrice: Float
+  minPrice: Float!
 
   """Minimum average review score. Must be between 0 and 10."""
   minRating: Float
