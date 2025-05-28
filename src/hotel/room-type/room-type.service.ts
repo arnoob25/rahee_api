@@ -3,6 +3,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { RoomType } from "../schemas/room-type.schema";
 import { Model, Types } from "mongoose";
 import { RoomTypeFilters } from "../types";
+import { SORT_ORDER } from "src/common/enums";
 
 @Injectable()
 export class RoomTypeService {
@@ -20,25 +21,13 @@ export class RoomTypeService {
   ): Promise<RoomType[]> {
     if (!roomTypeIds?.length) return []; // earlier steps returned no results
 
-    const { adults, amenities, children, minPrice, maxPrice } = input;
+    const { adults, amenities, children, minPrice, maxPrice, priceSort } =
+      input;
 
     const filterQuery: {
-      _id?: { $in: Types.ObjectId[] };
-      pricePerNight?: { $lte: number; $gte: number };
-      maxAdults: { $gte: number };
       complementaryChild?: { $gte: number };
       amenities?: { $all: string[] };
-    } = {
-      maxAdults: { $gte: adults },
-    };
-
-    if (roomTypeIds?.length) {
-      filterQuery._id = { $in: roomTypeIds };
-    }
-
-    if (typeof minPrice === "number" && typeof maxPrice === "number") {
-      filterQuery.pricePerNight = { $lte: maxPrice, $gte: minPrice };
-    }
+    } = {};
 
     if (typeof children === "number") {
       filterQuery.complementaryChild = { $gte: children };
@@ -48,6 +37,17 @@ export class RoomTypeService {
       filterQuery.amenities = { $all: amenities };
     }
 
-    return await this.roomTypeModel.find(filterQuery);
+    const query = this.roomTypeModel.find({
+      _id: { $in: roomTypeIds },
+      pricePerNight: { $lte: maxPrice, $gte: minPrice },
+      maxAdults: { $gte: adults },
+      ...filterQuery,
+    });
+
+    if (priceSort) {
+      query.sort({ pricePerNight: priceSort === SORT_ORDER.ASC ? 1 : -1 });
+    }
+
+    return await query.exec();
   }
 }

@@ -22,6 +22,7 @@ import { FilterHotelsInput } from "./dto/filter-hotels.input";
 import { ParseDatePipe } from "@nestjs/common";
 import { getHotelFilters, getRoomFilters, getRoomTypeFilters } from "./types";
 import { Location } from "src/common/schemas/location.schema";
+import { getUniqueObjectIds } from "src/common/utils/mongo.util";
 
 @Resolver(() => Hotel)
 export class HotelResolver {
@@ -45,41 +46,43 @@ export class HotelResolver {
   }
 
   @Query(() => [Hotel], {
-    description: "Get all the hotels in the database.",
+    description: "Filter and sort hotels from the database.",
   })
   async filterHotels(@Args("filters") filters: FilterHotelsInput) {
+    // narrow down scope by filtering out hotels with primary attributes
     const initialHotels = await this.hotelService.filter(
       getHotelFilters(filters)
-    ); // narrow down scope by filtering out obvious hotels
+    );
 
     if (!initialHotels.length) return [];
 
-    // further narrow down rooms we need to check
-    const roomTypesToCheck = Array.from(
-      new Set(initialHotels.map((hotel) => hotel.roomTypeIds).flat())
-    ); // ensure uniqueness
+    // find room types in these hotels that satisfy respective filters - to narrow down scope
+    let narrowedDownRoomTypeIds = getUniqueObjectIds(
+      initialHotels.map((hotel) => hotel.roomTypeIds).flat()
+    );
 
-    const initialRoomTypes = await this.roomTypeService.filter(
+    const filteredRoomTypes = await this.roomTypeService.filter(
       getRoomTypeFilters(filters),
-      roomTypesToCheck
+      narrowedDownRoomTypeIds
     );
 
-    if (!initialRoomTypes) return [];
+    if (!filteredRoomTypes) return [];
 
-    // search for available rooms within narrowed down context
-    const narrowedDownRoomTypes = initialRoomTypes.map(
-      (roomType) => roomType._id
-    );
+    narrowedDownRoomTypeIds = filteredRoomTypes.map((roomType) => roomType._id);
 
+    // check if these room types have rooms available - further narrow down the scope
     const availableRooms = await this.roomService.findAvailable(
       getRoomFilters(filters),
-      narrowedDownRoomTypes
+      narrowedDownRoomTypeIds
     );
+
+    if (!availableRooms) return [];
 
     const availableRoomTypeIds = new Set(
       availableRooms.map((room) => room.roomTypeId.toString())
-    ); // get unique room types
+    );
 
+    // these hotel themselves along with their room types with available rooms also satisfy the filters
     return initialHotels.filter((hotel) =>
       hotel.roomTypeIds.some((id) => availableRoomTypeIds.has(id.toString()))
     );
@@ -129,11 +132,14 @@ export class HotelResolver {
   }
 
   @ResolveField("startingPrice", () => Number, {
+    nullable: true,
     description: "Price of the room with the lowest rate in the hotel.",
   })
   async getStartingPrice(@Parent() hotel: Hotel) {
     const roomTypes = await this.roomTypeService.findByIds(hotel.roomTypeIds);
-    return Math.min(...roomTypes.map((rt) => rt.pricePerNight));
+    if (roomTypes.length === 0) return null;
+    const prices = roomTypes.map((rt) => rt.pricePerNight);
+    return Math.min(...prices);
   }
 
   @ResolveField("availableRoomCount", () => Number, {

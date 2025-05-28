@@ -4,6 +4,7 @@ import { Room } from "../schemas/room.schema";
 import { Model, Types } from "mongoose";
 import { Reservation } from "../schemas/reservation.schema";
 import { RoomFilters } from "../types";
+import { getUniqueObjectIds } from "src/common/utils/mongo.util";
 
 @Injectable()
 export class RoomService {
@@ -25,41 +26,44 @@ export class RoomService {
     input: RoomFilters,
     roomTypeIds?: Types.ObjectId[]
   ): Promise<Room[]> {
-    if (!roomTypeIds?.length) return []; // earlier steps returned no results
-
     const {
       checkInDate: desiredCheckInDate,
       checkOutDate: desiredCheckOutDate,
     } = input;
 
-    const filterQuery: { roomId?: { $in: Types.ObjectId[] } } = {};
+    if (!roomTypeIds?.length) return []; // earlier steps returned no results
 
-    // optionally narrow down scope
-    if (roomTypeIds?.length) {
-      const narrowedDownRooms = this.roomModel.find({
-        roomTypeId: { $in: roomTypeIds },
-      });
+    // narrow down scope by selecting rooms in available room types
+    const narrowedDownRooms = await this.roomModel.find({
+      roomTypeId: { $in: roomTypeIds },
+      isAvailable: true, // filter out out of service rooms
+    });
+    const narrowedDownRoomIds = narrowedDownRooms.map((roomId) => roomId._id);
 
-      const roomIds = (await narrowedDownRooms).map((roomId) => roomId._id);
+    if (!narrowedDownRoomIds?.length) return [];
 
-      if (roomIds?.length) filterQuery.roomId = { $in: roomIds };
-    }
-
-    const reservations = await this.reservationModel.find({
+    // find reservations for these rooms that overlap with the query
+    const overlappingReservations = await this.reservationModel.find({
       isCompleted: false,
-      $or: [
-        { checkInAt: { $gte: new Date(desiredCheckOutDate) } },
-        { checkOutAt: { $lte: new Date(desiredCheckInDate) } },
-      ],
-      ...filterQuery,
+      roomId: { $in: narrowedDownRoomIds },
+      checkInAt: { $lt: new Date(desiredCheckOutDate) },
+      checkOutAt: { $gt: new Date(desiredCheckInDate) },
     });
 
-    const availableRoomIds = reservations
-      .map((reservation) => reservation.roomId)
-      .filter((roomId) => roomId !== null);
+    let roomIdsWithOverlappingReservations: Types.ObjectId[] = [];
 
-    const uniqueRoomIds = Array.from(new Set(availableRoomIds)); // prevent getting the same room twice
+    if (overlappingReservations.length > 0) {
+      roomIdsWithOverlappingReservations = getUniqueObjectIds(
+        overlappingReservations.map((reservation) => reservation.roomId)
+      );
+    }
 
-    return this.findByIds(uniqueRoomIds);
+    // pick rooms without overlapping reservations
+    const availableRooms = narrowedDownRooms.filter(
+      (room) =>
+        !roomIdsWithOverlappingReservations.some((id) => id.equals(room._id))
+    );
+
+    return availableRooms;
   }
 }

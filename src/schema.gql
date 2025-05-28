@@ -18,7 +18,7 @@ input CreateHotelInput {
   roomTypeIds: [ID!]!
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
-  starRating: Float
+  stars: Float
 }
 
 """
@@ -64,10 +64,18 @@ input FilterHotelsInput {
   minPrice: Float
 
   """Minimum average review score. Must be between 0 and 10."""
-  reviewScore: Float
+  minRating: Float
+
+  """
+  Sort by popularity (average aggregated guest rating). Most popular (highest avg. rating) to least popular and vice versa.
+  """
+  popularitySort: String
+
+  """Sort by price (Lowest to highest, or highest to lowest)."""
+  priceSort: String
 
   """Hotel star rating. Must be between 1 and 5."""
-  starRating: Int
+  stars: Int
 
   """
   Generic labels that highlights key features of a hotel (Must exist in the Tag enum). Example: Budget Friendly.
@@ -131,10 +139,10 @@ type Hotel {
   roomTypes: [RoomType!]!
 
   """Rating of the hotel. 0-5 stars"""
-  starRating: Int
+  stars: Int
 
   """Price of the room with the lowest rate in the hotel."""
-  startingPrice: Float!
+  startingPrice: Float
 
   """
   Generic labels that highlights key features of a hotel. Example: Family Friendly, Budget Friendly.
@@ -215,7 +223,7 @@ type Mutation {
 }
 
 type Query {
-  """Get all the hotels in the database."""
+  """Filter and sort hotels from the database."""
   filterHotels(filters: FilterHotelsInput!): [Hotel!]!
 
   """Get all the hotels in the database."""
@@ -258,6 +266,11 @@ type Room {
 
   """The floor on which the room is located."""
   floorNumber: Int!
+
+  """
+  Whether the room is out of service or not. Ideally rooms are servicing and can be reserved.
+  """
+  isAvailable: Boolean!
 
   """Specific number assigned to the room."""
   roomNumber: Int!
@@ -327,7 +340,7 @@ input UpdateHotelInput {
   roomTypeIds: [ID!]
 
   """Rating of the hotel. 0-5 stars. Example: 4.5"""
-  starRating: Float
+  stars: Float
 }
 
 """Registered user of our service."""
