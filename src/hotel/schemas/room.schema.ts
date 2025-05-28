@@ -11,6 +11,13 @@ export class Room {
   @Field(() => ID, { description: "Unique identifier for the room." })
   _id: Types.ObjectId;
 
+  @Field({
+    description:
+      "Whether the room is out of service or not. Ideally rooms are servicing and can be reserved.",
+  })
+  @Prop({ default: true })
+  isAvailable: boolean;
+
   @Prop({ required: true, type: Types.ObjectId, ref: "RoomType" })
   @Field(() => ID, {
     description: "Reference ID to the type of room (e.g., Deluxe, Suite).",

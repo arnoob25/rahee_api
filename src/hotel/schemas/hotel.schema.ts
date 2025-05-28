@@ -41,7 +41,7 @@ export class Hotel {
     description: "Rating of the hotel. 0-5 stars",
   })
   @Prop({ default: 0, min: 0, max: 5 })
-  starRating?: number;
+  stars?: number;
 
   @Field(() => Float, {
     nullable: true,
