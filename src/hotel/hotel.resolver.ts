@@ -23,6 +23,7 @@ import { ParseDatePipe } from "@nestjs/common";
 import { getHotelFilters, getRoomFilters, getRoomTypeFilters } from "./types";
 import { Location } from "src/common/schemas/location.schema";
 import { getUniqueObjectIds } from "src/common/utils/mongo.util";
+import { SORT_ORDER } from "src/common/enums";
 
 @Resolver(() => Hotel)
 export class HotelResolver {
@@ -83,9 +84,45 @@ export class HotelResolver {
     );
 
     // these hotel themselves along with their room types with available rooms also satisfy the filters
-    return initialHotels.filter((hotel) =>
+    // if applied, these hotels are sorted by popularity (guest rating)
+    const finalHotels = initialHotels.filter((hotel) =>
       hotel.roomTypeIds.some((id) => availableRoomTypeIds.has(id.toString()))
     );
+
+    // optionally, sort by price
+    if (filters.priceSort) {
+      const roomTypeMap = new Map(
+        filteredRoomTypes.map((rt) => [rt._id.toString(), rt])
+      );
+
+      // Map each hotel ID to its minimum available room price
+      const hotelToMinPrice = new Map<string, number>();
+
+      for (const hotel of finalHotels) {
+        const prices = hotel.roomTypeIds
+          .map((id) => roomTypeMap.get(id.toString()))
+          .filter(
+            (rt): rt is (typeof filteredRoomTypes)[number] =>
+              !!rt && availableRoomTypeIds.has(rt._id.toString())
+          )
+          .map((rt) => rt.pricePerNight);
+
+        if (prices.length) {
+          hotelToMinPrice.set(hotel._id.toString(), Math.min(...prices));
+        }
+      }
+
+      finalHotels.sort((a, b) => {
+        const aPrice = hotelToMinPrice.get(a._id.toString()) ?? Infinity;
+        const bPrice = hotelToMinPrice.get(b._id.toString()) ?? Infinity;
+
+        return filters.priceSort === SORT_ORDER.ASC
+          ? aPrice - bPrice
+          : bPrice - aPrice;
+      });
+    }
+
+    return finalHotels;
   }
 
   @Query(() => Hotel, { nullable: true, description: "Find a hotel by its ID" })
