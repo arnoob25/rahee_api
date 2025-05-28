@@ -24,7 +24,7 @@ export class RoomService {
 
   async findAvailable(
     input: RoomFilters,
-    roomTypeIds?: Types.ObjectId[]
+    roomTypeIds: Types.ObjectId[]
   ): Promise<Room[]> {
     const {
       checkInDate: desiredCheckInDate,

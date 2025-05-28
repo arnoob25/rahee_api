@@ -104,25 +104,21 @@ export class FilterHotelsInput {
   @Expose()
   @Field(() => Float, {
     description: "Minimum price per night (in the relevant currency).",
-    nullable: true,
   })
-  @IsOptional()
   @IsNumber()
   @Min(ROOM_TYPE_CONFIG.MIN_PRICE_PER_NIGHT)
   @Max(ROOM_TYPE_CONFIG.MAX_PRICE_PER_NIGHT)
-  minPrice?: number;
+  minPrice: number;
 
   // TODO max price has to be more than min price
   @Expose()
   @Field(() => Float, {
     description: "Maximum price per night (in the relevant currency).",
-    nullable: true,
   })
-  @IsOptional()
   @IsNumber()
   @Min(ROOM_TYPE_CONFIG.MIN_PRICE_PER_NIGHT)
   @Max(ROOM_TYPE_CONFIG.MAX_PRICE_PER_NIGHT)
-  maxPrice?: number;
+  maxPrice: number;
 
   @Expose()
   @Field(() => Int, {

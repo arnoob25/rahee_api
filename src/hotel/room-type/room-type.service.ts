@@ -17,7 +17,7 @@ export class RoomTypeService {
 
   async filter(
     input: RoomTypeFilters,
-    roomTypeIds?: Types.ObjectId[]
+    roomTypeIds: Types.ObjectId[]
   ): Promise<RoomType[]> {
     if (!roomTypeIds?.length) return []; // earlier steps returned no results
 

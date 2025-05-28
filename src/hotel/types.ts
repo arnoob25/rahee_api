@@ -18,8 +18,8 @@ export type RoomTypeFilters = {
   adults: number;
   amenities?: string[];
   children?: number;
-  minPrice?: number;
-  maxPrice?: number;
+  minPrice: number;
+  maxPrice: number;
   priceSort?: SORT_ORDER;
 };
 
