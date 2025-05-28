@@ -28,7 +28,7 @@ scalar DateTime
 
 input FilterHotelsInput {
   """Type of accommodation. Example: Hotel, Resort, etc."""
-  accommodationTypes: String
+  accommodationTypes: [String!]
 
   """Number of adult guests. Must be at least 1."""
   adults: Int!

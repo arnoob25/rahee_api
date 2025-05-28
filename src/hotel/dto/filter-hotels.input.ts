@@ -19,13 +19,13 @@ import { SORT_ORDER } from "src/common/enums";
 @InputType()
 export class FilterHotelsInput {
   @Expose()
-  @Field(() => String, {
+  @Field(() => [String], {
     nullable: true,
     description: "Type of accommodation. Example: Hotel, Resort, etc.",
   })
   @IsOptional()
   @IsArray()
-  @IsEnum([Accommodation], {
+  @IsEnum(Accommodation, {
     each: true,
     message:
       "Accommodation types must be one of the allowed Accommodation enum values.",
