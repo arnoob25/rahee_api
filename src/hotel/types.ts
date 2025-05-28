@@ -1,15 +1,17 @@
 import { Types } from "mongoose";
 import { FilterHotelsInput } from "./dto/filter-hotels.input";
 import { BadRequestException } from "@nestjs/common";
+import { SORT_ORDER } from "src/common/enums";
 
 export type HotelFilters = {
   type?: string; // accommodation type e.g. hotel, resort
   locationId?: Types.ObjectId;
   city?: string;
-  reviewScore?: number;
-  starRating?: number;
+  minRating?: number;
+  stars?: number;
   tags?: string[];
   facilities?: string[];
+  popularitySort?: SORT_ORDER;
 };
 
 export type RoomTypeFilters = {
@@ -18,6 +20,7 @@ export type RoomTypeFilters = {
   children?: number;
   minPrice?: number;
   maxPrice?: number;
+  priceSort?: SORT_ORDER;
 };
 
 export type RoomFilters = {
@@ -38,10 +41,11 @@ export function getHotelFilters(input: FilterHotelsInput): HotelFilters {
     locationId: input.locationId
       ? new Types.ObjectId(input.locationId)
       : undefined,
-    reviewScore: input.reviewScore,
-    starRating: input.starRating,
+    minRating: input.minRating,
+    stars: input.stars,
     tags: input.tags,
     facilities: input.facilities,
+    popularitySort: input.popularitySort,
   };
 }
 
@@ -68,6 +72,7 @@ export function getRoomTypeFilters(input: FilterHotelsInput): RoomTypeFilters {
     children: input.children,
     maxPrice: input.maxPrice,
     minPrice: input.minPrice,
+    priceSort: input.priceSort,
   };
 }
 

@@ -5,6 +5,7 @@ import { InjectModel } from "@nestjs/mongoose";
 import { Hotel } from "./schemas/hotel.schema";
 import { Model, Types } from "mongoose";
 import { HotelFilters } from "./types";
+import { SORT_ORDER } from "src/common/enums";
 
 @Injectable()
 export class HotelService {
@@ -26,7 +27,7 @@ export class HotelService {
       city?: string;
       locationId?: Types.ObjectId;
       reviewScore?: { $gte: number };
-      starRating?: { $gte: number };
+      stars?: { $gte: number };
       tags?: { $all: string[] };
       facilities?: { $all: string[] };
       roomTypeIds?: { $in: Types.ObjectId[] };
@@ -37,9 +38,10 @@ export class HotelService {
       city,
       locationId,
       facilities,
-      reviewScore,
-      starRating,
+      minRating,
+      stars,
       tags,
+      popularitySort,
     } = input;
 
     if (type) {
@@ -54,12 +56,12 @@ export class HotelService {
       filterQuery.locationId = locationId;
     }
 
-    if (reviewScore !== undefined) {
-      filterQuery.reviewScore = { $gte: reviewScore };
+    if (minRating) {
+      filterQuery.reviewScore = { $gte: minRating };
     }
 
-    if (starRating !== undefined) {
-      filterQuery.starRating = { $gte: starRating };
+    if (stars) {
+      filterQuery.stars = { $gte: stars };
     }
 
     if (tags && tags.length > 0) {
@@ -70,7 +72,13 @@ export class HotelService {
       filterQuery.facilities = { $all: facilities };
     }
 
-    return this.hotelModel.find(filterQuery);
+    const query = this.hotelModel.find(filterQuery);
+
+    if (popularitySort) {
+      query.sort({ reviewScore: popularitySort === SORT_ORDER.ASC ? 1 : -1 });
+    }
+
+    return await query.exec();
   }
 
   async findOne(id: Types.ObjectId): Promise<Hotel> {

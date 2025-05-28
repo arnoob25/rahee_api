@@ -63,5 +63,5 @@ export class CreateHotelInput {
   @IsNumber()
   @Min(0)
   @Max(5)
-  starRating?: number;
+  stars?: number;
 }

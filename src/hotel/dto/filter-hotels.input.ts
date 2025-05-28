@@ -14,6 +14,7 @@ import { Types } from "mongoose";
 import { HOTEL_CONFIG, ROOM_TYPE_CONFIG } from "../config";
 import { Accommodation, Amenity, City, Facility, Tag } from "../enums";
 import { Expose } from "class-transformer";
+import { SORT_ORDER } from "src/common/enums";
 
 @InputType()
 export class FilterHotelsInput {
@@ -56,10 +57,10 @@ export class FilterHotelsInput {
     nullable: true,
   })
   @IsOptional()
-  @IsInt()
+  @IsNumber()
   @Min(HOTEL_CONFIG.MIN_REVIEW_SCORE)
   @Max(HOTEL_CONFIG.MAX_REVIEW_SCORE)
-  reviewScore?: number;
+  minRating?: number;
 
   @Expose()
   @Field(() => Int, {
@@ -70,7 +71,7 @@ export class FilterHotelsInput {
   @IsInt()
   @Min(1)
   @Max(5)
-  starRating?: number;
+  stars?: number;
 
   @Expose()
   @Field(() => [String], {
@@ -183,4 +184,29 @@ export class FilterHotelsInput {
     { message: "checkOutDate must be a valid ISO date string." }
   )
   checkOutDate: string;
+
+  @Expose()
+  @Field({
+    nullable: true,
+    description: "Sort by price (Lowest to highest, or highest to lowest).",
+  })
+  @IsOptional()
+  @IsEnum(SORT_ORDER, {
+    message:
+      "Sorting order should be either 'asc' (ascending) or 'dsc' descending.",
+  })
+  priceSort?: SORT_ORDER;
+
+  @Expose()
+  @Field({
+    nullable: true,
+    description:
+      "Sort by popularity (average aggregated guest rating). Most popular (highest avg. rating) to least popular and vice versa.",
+  })
+  @IsOptional()
+  @IsEnum(SORT_ORDER, {
+    message:
+      "Sorting order should be either 'asc' (ascending) or 'dsc' descending",
+  })
+  popularitySort?: SORT_ORDER;
 }
