@@ -20,7 +20,7 @@ export class CreateHotelInput {
   })
   @IsString()
   @Length(1, 100, {
-    message: "Hotel name must be between 1 and 100 characters long.",
+    message: "Please provide a hotel name between 1 and 100 characters.",
   })
   name: string;
 
@@ -31,7 +31,7 @@ export class CreateHotelInput {
   })
   @IsString()
   @Length(1, 500, {
-    message: "Description must be between 1 and 500 characters long.",
+    message: "Please provide a description between 1 and 500 characters.",
   })
   description: string;
 
@@ -40,7 +40,7 @@ export class CreateHotelInput {
     description: "Available types of rooms in a hotel.",
   })
   @IsArray()
-  @IsMongoId({ each: true })
+  @IsMongoId({ each: true, message: "Each room type ID must be a valid ID." })
   roomTypeIds: [Types.ObjectId];
 
   @Field({
@@ -50,7 +50,7 @@ export class CreateHotelInput {
   })
   @IsString()
   @Length(1, 200, {
-    message: "Address must be between 1 and 200 characters long.",
+    message: "Please provide an address between 1 and 200 characters.",
   })
   address: string;
 
@@ -61,7 +61,7 @@ export class CreateHotelInput {
   @IsOptional()
   @IsInt()
   @IsNumber()
-  @Min(0)
-  @Max(5)
+  @Min(0, { message: "Rating cannot be less than 0." })
+  @Max(5, { message: "Rating cannot be more than 5." })
   stars?: number;
 }

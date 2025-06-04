@@ -27,8 +27,7 @@ export class FilterHotelsInput {
   @IsArray()
   @IsEnum(Accommodation, {
     each: true,
-    message:
-      "Accommodation types must be one of the allowed Accommodation enum values.",
+    message: "One or more accommodation types are invalid.",
   })
   accommodationTypes?: string[];
 
@@ -40,7 +39,7 @@ export class FilterHotelsInput {
   })
   @IsOptional()
   @IsEnum(City, {
-    message: "Each city must be one of the allowed City enum values.",
+    message: "City is invalid.",
   })
   city?: string;
 
@@ -85,7 +84,7 @@ export class FilterHotelsInput {
   @IsArray()
   @IsEnum(Tag, {
     each: true,
-    message: "Each tag must be one of the allowed Tag enum values.",
+    message: "One or more tags are invalid.",
   })
   tags?: string[];
 
@@ -99,7 +98,7 @@ export class FilterHotelsInput {
   @IsArray()
   @IsEnum(Facility, {
     each: true,
-    message: "Each facility must be one of the allowed Facility enum values.",
+    message: "One or more facilities are invalid.",
   })
   facilities?: string[];
 
@@ -161,7 +160,7 @@ export class FilterHotelsInput {
   @IsArray()
   @IsEnum(Amenity, {
     each: true,
-    message: "Each amenity must be one of the allowed Amenity enum values.",
+    message: "One or more amenities are invalid.",
   })
   amenities?: string[];
 
@@ -169,7 +168,7 @@ export class FilterHotelsInput {
   @Field({
     description: "Check-in date in ISO 8601 format (YYYY-MM-DD).",
   })
-  @IsDateString({}, { message: "checkInDate must be a valid ISO date string." })
+  @IsDateString({}, { message: "Check-in date must be a valid date." })
   checkInDate: string;
 
   // TODO check out date greater than check in date
@@ -177,10 +176,7 @@ export class FilterHotelsInput {
   @Field({
     description: "Check-out date in ISO 8601 format (YYYY-MM-DD).",
   })
-  @IsDateString(
-    {},
-    { message: "checkOutDate must be a valid ISO date string." }
-  )
+  @IsDateString({}, { message: "Check-out date must be a valid date." })
   checkOutDate: string;
 
   @Expose()
@@ -190,8 +186,7 @@ export class FilterHotelsInput {
   })
   @IsOptional()
   @IsEnum(SORT_ORDER, {
-    message:
-      "Sorting order should be either 'asc' (ascending) or 'dsc' descending.",
+    message: "Price-sort order is invalid.",
   })
   priceSort?: SORT_ORDER;
 
@@ -203,8 +198,7 @@ export class FilterHotelsInput {
   })
   @IsOptional()
   @IsEnum(SORT_ORDER, {
-    message:
-      "Sorting order should be either 'asc' (ascending) or 'dsc' descending",
+    message: "Popularity-sort order is invalid.",
   })
   popularitySort?: SORT_ORDER;
 }
