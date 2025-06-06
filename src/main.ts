@@ -8,7 +8,7 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configureService = app.get(ConfigService);
   const port = configureService.get<number>("PORT") ?? 3000;
-  const origins = configureService.get<string[]>("CORS_ORIGIN");
+  const allowedOrigins = configureService.get<string[]>("CORS_ORIGIN");
 
   app.useGlobalPipes(
     new ValidationPipe({
@@ -21,7 +21,21 @@ async function bootstrap() {
   app.useGlobalFilters(new GraphqlExceptionFilter());
 
   app.enableCors({
-    origin: origins,
+    origin: (
+      origin: string | undefined,
+      callback: (err: Error | null, allow?: boolean) => void
+    ) => {
+      const isAllowed =
+        !origin ||
+        allowedOrigins?.includes(origin) ||
+        /^https:\/\/rahee-web.*\.vercel\.app$/.test(origin); // TODO remove it in production
+
+      if (isAllowed) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   });
 
