@@ -13,13 +13,32 @@ export enum Tag {
 }
 
 export enum Facility {
+  // Recreation
   Pool = "pool",
+  Tennis = "tennis",
+  Yoga = "yoga",
   Golf = "golf",
-  PlayGround = "playground",
-  BabySitting = "babysitting",
-  Gym = "gym",
+
+  // Childcare
+  KidsClub = "kids_club",
+  Babysitting = "babysitting",
+  ArtStudio = "art_studio",
+  Playground = "playground",
+
+  // Business
+  Networking = "networking",
+  Office = "office",
+  Collaboration = "collaboration",
+
+  // Accessibility
+  Wheelchair = "wheelchair",
+  VisualAlert = "visual_alert",
+
+  // Entertainment
+  Gaming = "gaming",
+  LiveMusic = "live_music",
   Cinema = "cinema",
-  Conference = "conference",
+  EscapeRoom = "escape_room",
 }
 
 export enum RoomCategory {
@@ -39,9 +58,13 @@ export enum BedType {
 
 export enum Amenity {
   Wifi = "wifi",
-  Tv = "tv",
-  Pool = "pool",
   Breakfast = "breakfast",
+  SmartTv = "smart_tv",
+  Workspace = "workspace",
+  Jacuzzi = "jacuzzi",
+  GameConsole = "game_console",
+  KidsBunkBed = "kids_bunk_bed",
+  InRoomSafe = "in_room_safe",
 }
 
 export enum MediaType {
