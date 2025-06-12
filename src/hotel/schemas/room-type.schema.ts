@@ -2,7 +2,7 @@ import { Field, ID, ObjectType, Int, Float } from "@nestjs/graphql";
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument, Types } from "mongoose";
 import { Amenity, BedType, RoomCategory } from "../enums";
-import { ROOM_TYPE_CONFIG } from "../config";
+import { HOTEL_CONFIG, ROOM_TYPE_CONFIG } from "../config";
 
 @ObjectType({
   description:
@@ -78,6 +78,17 @@ export class RoomType {
   })
   @Prop({ type: [String], enum: Object.values(Amenity) })
   amenities: Amenity[];
+
+  @Field(() => Float, {
+    nullable: true,
+    description: "Average user review score. 0-10",
+  })
+  @Prop({
+    default: 0,
+    min: HOTEL_CONFIG.MIN_REVIEW_SCORE,
+    max: HOTEL_CONFIG.MAX_REVIEW_SCORE,
+  })
+  reviewScore?: number;
 }
 
 export type RoomTypeDocument = HydratedDocument<RoomType>;

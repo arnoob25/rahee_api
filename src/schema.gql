@@ -129,7 +129,9 @@ type Hotel {
   """Number of reviews received by the hotel."""
   reviewCount: Float!
 
-  """Average user review score. 0-10"""
+  """
+  Average user review score, aggregating reviews of all room types. Range: 0-10
+  """
   reviewScore: Float
 
   """Finds all the user reviews for a hotel"""
@@ -311,6 +313,9 @@ type RoomType {
 
   """The price per night for this room type."""
   pricePerNight: Float!
+
+  """Average user review score. 0-10"""
+  reviewScore: Float
 
   """
   Category of rooms in a hotel. Each category holds several room types. Example: Suite category may hold room types: Family Suite, Penthouse Suite.
