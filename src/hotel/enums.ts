@@ -3,6 +3,12 @@ import { registerEnumType } from "@nestjs/graphql";
 export enum Accommodation {
   Hotel = "hotel",
   Resort = "resort",
+  Motel = "motel",
+  BedAndBreakfast = "bed_and_breakfast",
+  Guesthouse = "guesthouse",
+  Hostel = "hostel",
+  Villa = "villa",
+  ServicedApartment = "serviced_apartment",
 }
 
 export enum Tag {
